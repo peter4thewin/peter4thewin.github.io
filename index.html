@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f3ee">
+  <meta name="description" content="Selected film, video, and creative projects by Your Name.">
+  <title>Your Name — Film & Creative Work</title>
+  <style>
+    :root {
+      --paper: #f5f3ee;
+      --ink: #20211f;
+      --muted: #74756f;
+      --line: #d9d7cf;
+      --accent: #b95f42;
+      --max: 1180px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; background: var(--paper); color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55; -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    .wrap { width: min(calc(100% - 48px), var(--max)); margin-inline: auto; }
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 26px 0; border-bottom: 1px solid var(--line);
+    }
+    .wordmark { font-size: .88rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
+    nav { display: flex; gap: 28px; font-size: .82rem; color: var(--muted); }
+    nav a:hover, .text-link:hover { color: var(--accent); }
+    .hero { padding: clamp(72px, 12vw, 150px) 0 82px; }
+    .eyebrow { color: var(--accent); font-size: .72rem; letter-spacing: .16em; text-transform: uppercase; font-weight: 700; }
+    h1 {
+      font-family: Georgia, "Times New Roman", serif; font-weight: 400;
+      font-size: clamp(3.5rem, 10vw, 8.6rem); line-height: .94;
+      letter-spacing: -.065em; max-width: 950px; margin: 25px 0 28px;
+    }
+    h1 em { font-weight: 400; color: var(--accent); }
+    .hero-bottom { display: flex; align-items: end; justify-content: space-between; gap: 32px; }
+    .intro { max-width: 440px; color: var(--muted); font-size: 1.05rem; }
+    .scroll-note { font-size: .72rem; text-transform: uppercase; letter-spacing: .12em; white-space: nowrap; }
+    .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 20px; margin: 0 0 26px; }
+    h2 { font: 400 clamp(2rem, 4vw, 3.2rem)/1.05 Georgia, "Times New Roman", serif; letter-spacing: -.04em; margin: 0; }
+    .section-label { font-size: .72rem; color: var(--muted); text-transform: uppercase; letter-spacing: .13em; }
+    .work { padding: 36px 0 100px; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 52px 24px; }
+    .project { min-width: 0; }
+    .project:nth-child(even) { margin-top: 72px; }
+    .project-image {
+      display: block; position: relative; overflow: hidden; aspect-ratio: 1.36;
+      background: #dedbd2; margin-bottom: 17px;
+    }
+    .art { width: 100%; height: 100%; display: block; transition: transform .7s cubic-bezier(.2,.7,.2,1); }
+    .project:hover .art { transform: scale(1.035); }
+    .project-meta { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+    h3 { font-size: 1.08rem; font-weight: 550; margin: 0; }
+    .kind { color: var(--muted); font-size: .78rem; }
+    .project p { color: var(--muted); font-size: .9rem; max-width: 480px; margin: 8px 0 0; }
+    .about { border-top: 1px solid var(--line); padding: 88px 0 96px; display: grid; grid-template-columns: .8fr 1.2fr; gap: 10%; }
+    .about-copy { max-width: 620px; }
+    .about-copy p { font: 400 clamp(1.35rem, 2.5vw, 2rem)/1.4 Georgia, "Times New Roman", serif; letter-spacing: -.025em; margin: 0 0 24px; }
+    .details { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 36px; }
+    .detail-label { color: var(--muted); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 9px; }
+    .detail-value { font-size: .9rem; }
+    .contact { background: #242522; color: #f5f3ee; padding: 82px 0 34px; }
+    .contact .eyebrow { color: #e7a18a; }
+    .contact h2 { font-size: clamp(3rem, 8vw, 7rem); max-width: 850px; margin: 22px 0 30px; }
+    .contact-row { display: flex; align-items: center; justify-content: space-between; gap: 24px; border-bottom: 1px solid #555650; padding-bottom: 54px; }
+    .email-link { display: inline-flex; align-items: center; gap: 12px; border-bottom: 1px solid #a8a89f; padding-bottom: 8px; font-size: 1rem; }
+    .email-link:hover { color: #e7a18a; }
+    footer { display: flex; justify-content: space-between; gap: 20px; padding-top: 24px; color: #b8b8b0; font-size: .75rem; }
+    .socials { display: flex; gap: 20px; }
+    .socials a:hover { color: white; }
+    @media (max-width: 700px) {
+      .wrap { width: min(calc(100% - 32px), var(--max)); }
+      header { padding: 20px 0; align-items: flex-start; gap: 18px; }
+      nav { gap: 14px; flex-wrap: wrap; justify-content: flex-end; }
+      .hero { padding: 78px 0 64px; }
+      .hero-bottom { align-items: flex-start; flex-direction: column; gap: 18px; }
+      .grid { grid-template-columns: 1fr; gap: 38px; }
+      .project:nth-child(even) { margin-top: 0; }
+      .about { grid-template-columns: 1fr; gap: 28px; padding: 64px 0; }
+      .details { gap: 24px 16px; }
+      .contact { padding-top: 64px; }
+      .contact-row { align-items: flex-start; flex-direction: column; padding-bottom: 38px; }
+      footer { flex-direction: column; }
+      .section-head { align-items: flex-start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="wordmark" href="#top" aria-label="Your Name home">YOUR NAME</a>
+      <nav aria-label="Main navigation">
+        <a href="#work">Selected work</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero">
+        <div class="eyebrow">Film · Video · Creative technology</div>
+        <h1>Making ideas<br>feel <em>something.</em></h1>
+        <div class="hero-bottom">
+          <p class="intro">I’m Your Name — a creative technologist and visual storyteller working across film, video, and the details that bring an idea to life.</p>
+          <a class="scroll-note text-link" href="#work">Explore selected work ↓</a>
+        </div>
+      </section>
+
+      <section class="work" id="work">
+        <div class="section-head">
+          <h2>Selected work</h2>
+          <span class="section-label">A selection · 2023—2026</span>
+        </div>
+        <div class="grid">
+          <article class="project">
+            <a class="project-image" href="#contact" aria-label="Ask about Project One">
+              <svg class="art" viewBox="0 0 800 590" role="img" aria-label="Abstract warm-toned cinematic still" preserveAspectRatio="xMidYMid slice">
+                <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#c6a18a"/><stop offset=".52" stop-color="#8b6251"/><stop offset="1" stop-color="#343b3a"/></linearGradient><filter id="n1"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="2" stitchTiles="stitch"/><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .12 0"/></filter></defs>
+                <rect width="800" height="590" fill="url(#g1)"/><circle cx="570" cy="180" r="155" fill="#e9c5a1" opacity=".7"/><path d="M0 430 Q180 300 350 410 T800 355 V590 H0Z" fill="#252d2d" opacity=".83"/><path d="M220 590 V330 Q330 250 420 330 V590" fill="#171e1e" opacity=".65"/><rect width="800" height="590" filter="url(#n1)" opacity=".3"/>
+              </svg>
+            </a>
+            <div class="project-meta"><h3>Project One</h3><span class="kind">Short film</span></div>
+            <p>A short description of the project, your role, and the idea behind the work. Replace this with a real project.</p>
+          </article>
+          <article class="project">
+            <a class="project-image" href="#contact" aria-label="Ask about Project Two">
+              <svg class="art" viewBox="0 0 800 590" role="img" aria-label="Abstract architectural image in muted blue" preserveAspectRatio="xMidYMid slice">
+                <defs><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#c9d0cb"/><stop offset="1" stop-color="#6c7d7d"/></linearGradient><filter id="n2"><feTurbulence type="fractalNoise" baseFrequency=".6" numOctaves="2"/><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .12 0"/></filter></defs>
+                <rect width="800" height="590" fill="url(#g2)"/><path d="M0 590 L180 90 H375 L510 590Z" fill="#e8e4d9"/><path d="M375 590 L470 0 H800 V590Z" fill="#394b4d"/><path d="M510 590 L620 170 H800 V590Z" fill="#a7b4ae" opacity=".8"/><path d="M0 455 H800" stroke="#f3f0e7" stroke-width="3" opacity=".6"/><rect width="800" height="590" filter="url(#n2)" opacity=".3"/>
+              </svg>
+            </a>
+            <div class="project-meta"><h3>Project Two</h3><span class="kind">Commercial</span></div>
+            <p>Show the challenge, your contribution, and the result in one or two clear sentences.</p>
+          </article>
+          <article class="project">
+            <a class="project-image" href="#contact" aria-label="Ask about Project Three">
+              <svg class="art" viewBox="0 0 800 590" role="img" aria-label="Abstract editorial still in olive and cream" preserveAspectRatio="xMidYMid slice">
+                <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8cbb2"/><stop offset="1" stop-color="#a4a18b"/></linearGradient><filter id="n3"><feTurbulence type="fractalNoise" baseFrequency=".7" numOctaves="2"/><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .12 0"/></filter></defs>
+                <rect width="800" height="590" fill="url(#g3)"/><circle cx="290" cy="270" r="190" fill="#e9e0ce"/><path d="M440 0 H800 V590 H500 Q570 380 440 0Z" fill="#687366"/><path d="M0 500 Q220 400 420 520 T800 470 V590 H0Z" fill="#333d34" opacity=".8"/><rect width="800" height="590" filter="url(#n3)" opacity=".3"/>
+              </svg>
+            </a>
+            <div class="project-meta"><h3>Project Three</h3><span class="kind">Creative direction</span></div>
+            <p>Use this space for a campaign, concept, personal experiment, or behind-the-scenes project.</p>
+          </article>
+          <article class="project">
+            <a class="project-image" href="#contact" aria-label="Ask about Project Four">
+              <svg class="art" viewBox="0 0 800 590" role="img" aria-label="Abstract dark cinematic image with a red accent" preserveAspectRatio="xMidYMid slice">
+                <defs><linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#4c4a46"/><stop offset=".6" stop-color="#222625"/><stop offset="1" stop-color="#141817"/></linearGradient><filter id="n4"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2"/><feColorMatrix values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 .12 0"/></filter></defs>
+                <rect width="800" height="590" fill="url(#g4)"/><rect x="105" y="70" width="230" height="450" fill="#8d4c3c" opacity=".9"/><rect x="150" y="110" width="140" height="365" fill="#c28b72" opacity=".4"/><path d="M400 590 L515 0 H800 V590Z" fill="#353b37"/><path d="M0 520 L360 380 L800 470 V590 H0Z" fill="#111615" opacity=".8"/><rect width="800" height="590" filter="url(#n4)" opacity=".3"/>
+              </svg>
+            </a>
+            <div class="project-meta"><h3>Project Four</h3><span class="kind">Production / workflow</span></div>
+            <p>Creative work can include technical problem-solving, production systems, or a process you improved.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="about" id="about">
+        <div>
+          <div class="eyebrow">A little about me</div>
+        </div>
+        <div class="about-copy">
+          <p>I’m interested in the space between a strong idea and the work it takes to bring it into the world.</p>
+          <p style="font: 400 1rem/1.75 Inter, ui-sans-serif, system-ui, sans-serif; color:var(--muted); letter-spacing:0">My background spans media technology and video production. I enjoy solving problems, collaborating with people, and finding thoughtful ways to make creative work happen. This is a starting draft — personalize it with your story, strengths, and direction.</p>
+          <div class="details">
+            <div><div class="detail-label">Focus</div><div class="detail-value">Film · Video · Production</div></div>
+            <div><div class="detail-label">Based in</div><div class="detail-value">Los Angeles, California</div></div>
+            <div><div class="detail-label">Available for</div><div class="detail-value">Projects · Collaborations</div></div>
+            <div><div class="detail-label">Tools</div><div class="detail-value">Add your key tools here</div></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <section class="contact" id="contact">
+    <div class="wrap">
+      <div class="eyebrow">Have something in mind?</div>
+      <h2>Let’s make<br>something good.</h2>
+      <div class="contact-row">
+        <a class="email-link" href="mailto:hello@example.com">hello@example.com <span aria-hidden="true">↗</span></a>
+        <span style="color:#b8b8b0;font-size:.85rem">Open to thoughtful projects and collaborations.</span>
+      </div>
+      <footer>
+        <span>© <span id="year"></span> Your Name. All rights reserved.</span>
+        <div class="socials">
+          <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">LinkedIn ↗</a>
+          <a href="https://vimeo.com/" target="_blank" rel="noreferrer">Vimeo ↗</a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noreferrer">Instagram ↗</a>
+        </div>
+      </footer>
+    </div>
+  </section>
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
