@@ -9,32 +9,42 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
   <style>
-    :root { color-scheme: dark; --bg:#0b1020; --white:#f5f7ff; --muted:rgba(245,247,255,.82); }
+    :root { color-scheme: dark; --bg:#0b1020; --white:#f5f7ff; --muted:rgba(245,247,255,.84); --accent:rgba(245,247,255,.45); }
     * { box-sizing:border-box; }
     body { margin:0; min-height:100svh; background:var(--bg); color:var(--white); font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; isolation:isolate; }
     body::before {
       content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
-      background: linear-gradient(rgba(11,16,32,.24),rgba(11,16,32,.38)),
+      background: linear-gradient(rgba(11,16,32,.30),rgba(11,16,32,.50)),
         url("/assets/background.png") center / cover no-repeat;
     }
-    .brand { position:fixed; top:30px; left:34px; color:var(--white); text-decoration:none; font:600 32px Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.01em; }
-    nav { position:fixed; top:30px; right:34px; display:flex; gap:clamp(16px,2.5vw,32px); }
-    nav a { color:var(--muted); text-decoration:none; font-size:12px; letter-spacing:.13em; text-transform:uppercase; transition:color 180ms ease; }
+
+    .brand { position:fixed; top:30px; left:34px; z-index:2; color:var(--white); text-decoration:none; font:600 30px Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.01em; }
+    nav { position:fixed; top:36px; right:34px; z-index:2; display:flex; gap:clamp(18px,2.5vw,34px); }
+    nav a { color:var(--muted); text-decoration:none; font-size:13px; letter-spacing:.13em; text-transform:uppercase; transition:color 180ms ease; }
     nav a:hover, nav a.active { color:var(--white); }
-    main { min-height:100svh; width:min(100% - 48px,1120px); margin:0 auto; padding:clamp(190px,28vh,290px) 0 80px; }
-    h1 { margin:0 0 34px; font:600 clamp(2.2rem,5vw,3.4rem)/1.05 Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.025em; }
-    .about-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(240px,360px); align-items:center; gap:clamp(36px,6vw,76px); }
-    .portrait { display:block; width:100%; max-height:520px; aspect-ratio:4/5; object-fit:cover; object-position:center; border-radius:5px; box-shadow:0 18px 55px rgba(0,0,0,.24); }
-    .bio { max-width:650px; margin:0; color:var(--muted); font-size:24px; letter-spacing:.015em; line-height:1.65; text-align:left; }
-    @media(max-width:700px) {
-      .brand { top:18px; left:18px; font-size:28px; }
-      nav { top:58px; left:18px; right:18px; justify-content:flex-end; gap:14px; }
-      nav a { font-size:12px; letter-spacing:.06em; }
-      main { width:calc(100% - 40px); padding-top:190px; }
-      h1 { margin-bottom:26px; }
-      .about-layout { grid-template-columns:1fr; gap:28px; }
-      .portrait { width:min(100%,360px); max-height:460px; }
-      .bio { font-size:20px; line-height:1.65; }
+
+    main { width:min(100% - 64px,1040px); margin:0 auto; padding:clamp(130px,20vh,200px) 0 90px; }
+
+    .about-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(260px,380px); align-items:center; gap:clamp(40px,7vw,96px); }
+
+    .text { max-width:560px; }
+    h1 { margin:0 0 28px; font:600 clamp(2.6rem,5.5vw,4rem)/1 Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.03em; text-align:left; }
+    h1::after { content:""; display:block; width:56px; height:2px; margin-top:24px; background:var(--accent); }
+    .bio { margin:0; color:var(--muted); font-size:clamp(1.05rem,1.5vw,1.25rem); line-height:1.75; letter-spacing:.01em; text-align:left; }
+
+    .portrait { display:block; width:100%; aspect-ratio:4/5; object-fit:cover; object-position:center top; border-radius:6px; box-shadow:0 20px 60px rgba(0,0,0,.35); }
+
+    @media(max-width:760px) {
+      .brand { top:18px; left:20px; font-size:26px; }
+      nav { top:62px; left:20px; right:20px; justify-content:flex-start; gap:18px; }
+      nav a { font-size:12px; letter-spacing:.08em; }
+      main { width:calc(100% - 40px); padding:150px 0 64px; }
+      .about-layout { grid-template-columns:1fr; gap:36px; }
+      .text { max-width:none; }
+      h1 { font-size:2.4rem; margin-bottom:22px; }
+      h1::after { margin-top:18px; }
+      .bio { font-size:1.05rem; }
+      .portrait { width:min(100%,340px); }
     }
   </style>
 </head>
@@ -46,10 +56,12 @@
     <a href="contact.html">Contact</a>
   </nav>
   <main>
-    <h1>About</h1>
     <section class="about-layout" aria-label="About Peter">
-      <p class="bio">Peter is an LA-based filmmaker originally from Harrisburg, Pennsylvania. He has worked on movies and TV shows for over ten years and loves making his own projects on the side. Stories continue to fascinate him, and he wants to bring his favorite ones to the big screen.</p>
-      <img class="portrait" src="/assets/self%20portrait.jpg" alt="Portrait of Peter Liu">
+      <div class="text">
+        <h1>About</h1>
+        <p class="bio">Peter is an LA-based filmmaker originally from Harrisburg, Pennsylvania. He has worked on movies and TV shows for over ten years and loves making his own projects on the side. Stories continue to fascinate him, and he wants to bring his favorite ones to the big screen.</p>
+      </div>
+      <img class="portrait" src="/assets/self-portrait.jpg" alt="Portrait of Peter Liu">
     </section>
   </main>
 </body>
