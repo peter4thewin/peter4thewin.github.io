@@ -112,6 +112,7 @@
       transform: translate(-50%, -50%);
       opacity: 0;
       visibility: hidden;
+      pointer-events: none;
       transition: opacity 750ms ease, visibility 0s linear 750ms;
     }
     /* Laid out in its final position but invisible, so JS can measure it. */
@@ -124,6 +125,7 @@
     .reel.is-visible {
       opacity: 1;
       visibility: visible;
+      pointer-events: auto;
       transition: none;
     }
     .video-frame {
@@ -154,7 +156,7 @@
     }
     .reel.is-visible .reel-note {
       opacity: 1;
-      transition: opacity 700ms ease 250ms;
+      transition: opacity 1200ms ease 700ms;
     }
     .back {
       position: fixed;
@@ -237,14 +239,16 @@
 
     // Transition tuning
     const EXPAND_MS = 1000;                  // portrait grows into the video frame
-    const FADE_MS = 700;                     // portrait dissolves to reveal the video
+    const FADE_MS = 1800;                    // portrait dissolves to reveal the video
     const EASE = 'cubic-bezier(.72, 0, .16, 1)';
+    const FADE_EASE = 'cubic-bezier(.37, 0, .63, 1)';  // slow in, slow out, like a breath
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     let player = null;
     let playerReady = false;
     let playWhenReady = false;
     let busy = false;
+    let activeMorph = null;
 
     window.onYouTubeIframeAPIReady = () => {
       player = new YT.Player('directorVideo', {
@@ -297,33 +301,48 @@
       if (playerReady) player.playVideo();
       else playWhenReady = true;
 
-      // 1) Expand: portrait box grows into the video frame.
-      const grow = morph.animate([box(from), box(to)], {
-        duration: reduceMotion ? 1 : EXPAND_MS,
-        easing: EASE,
-        fill: 'forwards'
-      });
-      await grow.finished;
+      activeMorph = morph;
 
-      // 2) Reveal: the portrait is now exactly covering the video frame.
-      //    Switch the video on underneath it, then dissolve the portrait.
-      reel.classList.add('is-visible');
-      reel.classList.remove('is-preparing');
-      back.classList.add('is-visible');
+      try {
+        // 1) Expand: portrait box grows into the video frame.
+        const grow = morph.animate([box(from), box(to)], {
+          duration: reduceMotion ? 1 : EXPAND_MS,
+          easing: EASE,
+          fill: 'forwards'
+        });
+        await grow.finished;
 
-      const fade = morph.animate([{ opacity: 1 }, { opacity: 0 }], {
-        duration: reduceMotion ? 1 : FADE_MS,
-        easing: 'ease',
-        fill: 'forwards'
-      });
-      await fade.finished;
+        // 2) Reveal: the portrait is now exactly covering the video frame.
+        //    Switch the video on underneath it, then dissolve the portrait.
+        reel.classList.add('is-visible');
+        reel.classList.remove('is-preparing');
+        back.classList.add('is-visible');
+        busy = false; // Back may interrupt the dissolve from here on
 
-      morph.remove();
-      busy = false;
+        const fade = morph.animate([{ opacity: 1 }, { opacity: 0 }], {
+          duration: reduceMotion ? 1 : FADE_MS,
+          easing: FADE_EASE,
+          fill: 'forwards'
+        });
+        await fade.finished;
+      } catch (err) {
+        // Back cancelled the animation mid-way; nothing to finish.
+      } finally {
+        morph.remove();
+        if (activeMorph === morph) {
+          activeMorph = null;
+          busy = false;
+        }
+      }
     });
 
     back.addEventListener('click', () => {
       if (busy) return;
+      if (activeMorph) {
+        activeMorph.getAnimations().forEach(a => a.cancel());
+        activeMorph.remove();
+        activeMorph = null;
+      }
       playWhenReady = false;
       if (playerReady) {
         player.pauseVideo();
