@@ -53,27 +53,32 @@
       outline-offset: 8px;
       isolation: isolate;
     }
-    .portrait-transition {
+    .portrait-morph {
       position: fixed;
-      z-index: 10;
-      margin: 0;
-      padding: 0;
-      aspect-ratio: auto;
-      transform: none;
+      z-index: 20;
+      overflow: hidden;
       pointer-events: none;
+      background: #171816;
+      will-change: left, top, width, height;
       transition:
-        left 1200ms cubic-bezier(.22,.7,.18,1),
-        top 1200ms cubic-bezier(.22,.7,.18,1),
-        width 1200ms cubic-bezier(.22,.7,.18,1),
-        height 1200ms cubic-bezier(.22,.7,.18,1),
-        border-radius 1200ms cubic-bezier(.22,.7,.18,1);
+        left 1250ms cubic-bezier(.65,0,.35,1),
+        top 1250ms cubic-bezier(.65,0,.35,1),
+        width 1250ms cubic-bezier(.65,0,.35,1),
+        height 1250ms cubic-bezier(.65,0,.35,1);
     }
-    .portrait-transition.is-expanded {
-      left: 50% !important;
-      top: 50% !important;
-      width: min(calc(100vw - 48px), 1120px) !important;
-      height: min(calc((100vw - 48px) * 0.5625), 630px) !important;
+    .portrait-morph .portrait-art {
+      position: absolute;
+      inset: auto;
+      left: 50%;
+      top: 50%;
+      width: 100%;
+      height: 125%;
       transform: translate(-50%, -50%);
+      transition: opacity 450ms ease 650ms;
+      will-change: opacity;
+    }
+    .portrait-morph.is-revealing .portrait-art {
+      opacity: 0;
     }
     .portrait-art {
       position: absolute;
@@ -282,26 +287,42 @@
       if (landing.classList.contains('is-leaving')) return;
 
       const start = enter.getBoundingClientRect();
-      const transitionPortrait = enter.cloneNode(true);
-      transitionPortrait.removeAttribute('id');
-      transitionPortrait.setAttribute('aria-hidden', 'true');
-      transitionPortrait.tabIndex = -1;
-      transitionPortrait.classList.add('portrait-transition');
-      Object.assign(transitionPortrait.style, {
+      const portraitMorph = document.createElement('div');
+      portraitMorph.className = 'portrait-morph';
+      portraitMorph.setAttribute('aria-hidden', 'true');
+      const portraitArt = enter.querySelector('.portrait-art').cloneNode(true);
+      portraitMorph.appendChild(portraitArt);
+
+      Object.assign(portraitMorph.style, {
         left: start.left + 'px',
         top: start.top + 'px',
         width: start.width + 'px',
         height: start.height + 'px'
       });
-      document.body.appendChild(transitionPortrait);
+      document.body.appendChild(portraitMorph);
 
       landing.classList.add('is-leaving');
       reel.classList.add('is-visible');
       back.classList.add('is-visible');
 
+      const reelWidth = Math.min(window.innerWidth - (window.innerWidth <= 640 ? 32 : 48), 1120);
+      const reelHeight = reelWidth * 9 / 16;
+      const target = {
+        left: (window.innerWidth - reelWidth) / 2,
+        top: (window.innerHeight - reelHeight) / 2,
+        width: reelWidth,
+        height: reelHeight
+      };
+
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          transitionPortrait.classList.add('is-expanded');
+          Object.assign(portraitMorph.style, {
+            left: target.left + 'px',
+            top: target.top + 'px',
+            width: target.width + 'px',
+            height: target.height + 'px'
+          });
+          portraitMorph.classList.add('is-revealing');
         });
       });
 
@@ -310,9 +331,9 @@
       }
 
       window.setTimeout(() => {
-        transitionPortrait.remove();
+        portraitMorph.remove();
         landing.hidden = true;
-      }, 1300);
+      }, 1750);
     });
 
     back.addEventListener('click', () => {
