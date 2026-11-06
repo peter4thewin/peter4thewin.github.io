@@ -14,8 +14,10 @@
     body { margin:0; min-height:100svh; background:var(--bg); color:var(--white); font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; isolation:isolate; }
     body::before {
       content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
-      background: linear-gradient(rgba(11,16,32,.30),rgba(11,16,32,.50)),
-        url("/assets/background.png") center / cover no-repeat;
+      background-image: linear-gradient(rgba(11,16,32,.30),rgba(11,16,32,.50)), url("/assets/background.png");
+      background-position: center center, center center;
+      background-size: 100% 100%, cover;
+      background-repeat: no-repeat, no-repeat;
     }
     .brand { position:fixed; top:30px; left:34px; z-index:2; color:var(--white); text-decoration:none; font:600 30px Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.01em; }
     nav { position:fixed; top:30px; right:34px; display:flex; gap:clamp(16px,2.5vw,32px); }
