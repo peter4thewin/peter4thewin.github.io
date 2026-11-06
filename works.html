@@ -4,86 +4,154 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="Selected directing and creative projects by Peter Liu.">
   <title>Selected Works — Peter Liu</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://i.ytimg.com">
+  <link rel="stylesheet" href="assets/site.css">
   <style>
-    :root { color-scheme: dark; --bg:#0b1020; --white:#f5f7ff; --muted:rgba(245,247,255,.72); }
-    * { box-sizing:border-box; }
-    body { margin:0; min-height:100svh; background:var(--bg); color:var(--white); font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased;  isolation:isolate; }
-    /* Shared antique navy texture */
-    body::before {
-      content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
-      background-image: linear-gradient(rgba(11,16,32,.30),rgba(11,16,32,.50)), url("/assets/background.png");
-      background-position: center center, center center;
-      background-size: 100% 100%, cover;
-      background-repeat: no-repeat, no-repeat;
-    }
-
-    .brand { position:fixed; top:30px; left:34px; z-index:2; color:var(--white); text-decoration:none; font:600 30px Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.01em; }
-    nav { position:fixed; top:30px; right:34px; display:flex; gap:clamp(16px,2.5vw,32px); z-index:5; }
-    nav a { color:var(--muted); text-decoration:none; font-size:12px; letter-spacing:.13em; text-transform:uppercase; transition:color 180ms ease; }
-    nav a:hover, nav a.active { color:var(--white); }
-    main { min-height:100svh; width:min(100% - 48px,1120px); margin:0 auto; padding:clamp(150px,22vh,230px) 0 80px; }
-    h1 { margin:0; font:600 clamp(2.2rem,5vw,3.4rem)/1.05 Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.025em; }
-    .intro { margin:18px 0 0; color:var(--muted); font-size:12px; letter-spacing:.13em; text-transform:uppercase; }
     .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:44px 28px; margin-top:56px; }
     .card { display:block; color:var(--white); text-decoration:none; }
     .thumb { position:relative; aspect-ratio:16/9; overflow:hidden; background:rgba(245,247,255,.06); }
     .thumb img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 500ms ease, opacity 300ms ease; }
-    .thumb::after { content:"↗"; position:absolute; right:12px; bottom:10px; font-size:18px; opacity:0; transform:translate(-4px,4px); transition:opacity 220ms ease, transform 220ms ease; }
+    .thumb::after { content:"\2197"; position:absolute; right:12px; bottom:10px; font-size:18px; opacity:0; transform:translate(-4px,4px); transition:opacity 220ms ease, transform 220ms ease; }
     .card:hover .thumb img, .card:focus-visible .thumb img { transform:scale(1.04); opacity:.8; }
     .card:hover .thumb::after, .card:focus-visible .thumb::after { opacity:1; transform:none; }
-    .card:focus-visible { outline:1px solid var(--white); outline-offset:6px; }
     .title { margin:16px 0 0; font:600 16px Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.01em; }
-    @media(max-width:900px) { .grid { grid-template-columns:repeat(2,1fr); } }
-    @media(max-width:640px) {
-      .brand { top:18px; left:20px; font-size:26px; }
-      nav { top:58px; left:18px; right:18px; justify-content:flex-end; gap:14px; }
-      nav a { font-size:12px; letter-spacing:.06em; }
-      main { width:calc(100% - 40px); padding-top:180px; }
-      .grid { grid-template-columns:1fr; gap:36px; margin-top:44px; }
-      .brand, nav { position:absolute; }
-    }
+
+    /* Video player */
+    body:has(dialog[open]) { overflow:hidden; }
+    .player { border:0; padding:0; margin:auto; background:transparent; color:var(--white); width:min(100% - 40px,1120px); max-width:none; max-height:none; overflow:visible; }
+    .player::backdrop { background:rgba(7,12,27,.92); -webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px); animation:player-fade 300ms ease; }
+    @keyframes player-fade { from { opacity:0; } }
+    .player-inner { width:min(100%, calc((100svh - 170px) * 16 / 9)); margin:0 auto; }
+    .player-bar, .player-foot { display:flex; align-items:center; justify-content:space-between; gap:20px; animation:player-fade 500ms ease 200ms backwards; }
+    .player-bar { margin-bottom:14px; }
+    .player-foot { margin-top:14px; }
+    .player-title { margin:0; font:600 clamp(1.1rem,2.2vw,1.5rem)/1.2 Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.01em; }
+    .player-close, .player-yt { padding:8px 0; border:0; background:transparent; color:var(--muted); font:inherit; font-size:12px; letter-spacing:.13em; text-transform:uppercase; text-decoration:none; cursor:pointer; transition:color 180ms ease; }
+    .player-close:hover, .player-yt:hover { color:var(--white); }
+    .player-frame { position:relative; aspect-ratio:16/9; background:#000 center/cover no-repeat; box-shadow:0 24px 80px rgba(0,0,0,.45); }
+    .player-frame iframe { position:absolute; inset:0; width:100%; height:100%; border:0; opacity:0; transition:opacity 400ms ease; }
+    .player-frame iframe.is-ready { opacity:1; }
+    @media (max-width:900px) { .grid { grid-template-columns:repeat(2,1fr); } }
+    @media (max-width:640px) { .grid { grid-template-columns:1fr; gap:36px; margin-top:44px; } }
   </style>
 </head>
 <body>
-  <a class="brand" href="index.html">Peter Liu</a>
-  <nav aria-label="Main navigation">
-    <a href="about.html">About</a>
-    <a href="works.html" class="active" aria-current="page">Selected Works</a>
-    <a href="contact.html">Contact</a>
-  </nav>
-  <main>
-    <h1>Selected Works</h1>
+  <header class="site-header">
+    <a class="brand" href="index.html">Peter Liu</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="about.html">About</a>
+      <a href="works.html" class="active" aria-current="page">Selected Works</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <main style="--w:1120px">
+    <h1 class="page-title">Selected Works</h1>
     <p class="intro">A selection of directing and creative projects.</p>
     <div class="grid">
-      <a class="card" href="https://www.youtube.com/watch?v=pHZ_qz2Vkz8" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.ytimg.com/vi/pHZ_qz2Vkz8/hqdefault.jpg" alt="Roach" loading="lazy"></div>
+      <a class="card" data-video="pHZ_qz2Vkz8" href="https://www.youtube.com/watch?v=pHZ_qz2Vkz8" target="_blank" rel="noopener">
+        <div class="thumb"><img src="https://i.ytimg.com/vi/pHZ_qz2Vkz8/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/pHZ_qz2Vkz8/hqdefault.jpg'" alt="" loading="lazy" width="1280" height="720"></div>
         <p class="title">Roach</p>
       </a>
-      <a class="card" href="https://www.youtube.com/watch?v=QZl37rkPiXQ" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.ytimg.com/vi/QZl37rkPiXQ/hqdefault.jpg" alt="Lemon Empire" loading="lazy"></div>
+      <a class="card" data-video="QZl37rkPiXQ" href="https://www.youtube.com/watch?v=QZl37rkPiXQ" target="_blank" rel="noopener">
+        <div class="thumb"><img src="https://i.ytimg.com/vi/QZl37rkPiXQ/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/QZl37rkPiXQ/hqdefault.jpg'" alt="" loading="lazy" width="1280" height="720"></div>
         <p class="title">Lemon Empire</p>
       </a>
-      <a class="card" href="https://www.youtube.com/watch?v=X3WXsws7k0Q" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.ytimg.com/vi/X3WXsws7k0Q/hqdefault.jpg" alt="Null Void" loading="lazy"></div>
+      <a class="card" data-video="X3WXsws7k0Q" href="https://www.youtube.com/watch?v=X3WXsws7k0Q" target="_blank" rel="noopener">
+        <div class="thumb"><img src="https://i.ytimg.com/vi/X3WXsws7k0Q/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/X3WXsws7k0Q/hqdefault.jpg'" alt="" loading="lazy" width="1280" height="720"></div>
         <p class="title">Null Void</p>
       </a>
-      <a class="card" href="https://www.youtube.com/watch?v=yDEvM83Ux2U" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.ytimg.com/vi/yDEvM83Ux2U/hqdefault.jpg" alt="The Spooky Roommate" loading="lazy"></div>
+      <a class="card" data-video="yDEvM83Ux2U" href="https://www.youtube.com/watch?v=yDEvM83Ux2U" target="_blank" rel="noopener">
+        <div class="thumb"><img src="https://i.ytimg.com/vi/yDEvM83Ux2U/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/yDEvM83Ux2U/hqdefault.jpg'" alt="" loading="lazy" width="1280" height="720"></div>
         <p class="title">The Spooky Roommate</p>
       </a>
-      <a class="card" href="https://www.youtube.com/watch?v=P9mMHnez764" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.ytimg.com/vi/P9mMHnez764/hqdefault.jpg" alt="Fight Night" loading="lazy"></div>
+      <a class="card" data-video="P9mMHnez764" href="https://www.youtube.com/watch?v=P9mMHnez764" target="_blank" rel="noopener">
+        <div class="thumb"><img src="https://i.ytimg.com/vi/P9mMHnez764/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/P9mMHnez764/hqdefault.jpg'" alt="" loading="lazy" width="1280" height="720"></div>
         <p class="title">Fight Night</p>
       </a>
-      <a class="card" href="https://www.youtube.com/watch?v=uTym0YRT8Uc" target="_blank" rel="noopener">
-        <div class="thumb"><img src="https://i.ytimg.com/vi/uTym0YRT8Uc/hqdefault.jpg" alt="The Sleep Leach" loading="lazy"></div>
+      <a class="card" data-video="uTym0YRT8Uc" href="https://www.youtube.com/watch?v=uTym0YRT8Uc" target="_blank" rel="noopener">
+        <div class="thumb"><img src="https://i.ytimg.com/vi/uTym0YRT8Uc/maxresdefault.jpg" onerror="this.onerror=null;this.src='https://i.ytimg.com/vi/uTym0YRT8Uc/hqdefault.jpg'" alt="" loading="lazy" width="1280" height="720"></div>
         <p class="title">The Sleep Leach</p>
       </a>
     </div>
   </main>
+  <dialog class="player" id="player" aria-labelledby="playerTitle">
+    <div class="player-inner">
+      <div class="player-bar">
+        <h2 class="player-title" id="playerTitle"></h2>
+        <button class="player-close" type="button" id="playerClose">Close</button>
+      </div>
+      <div class="player-frame" id="playerFrame"></div>
+      <div class="player-foot">
+        <span></span>
+        <a class="player-yt" id="playerYt" href="#" target="_blank" rel="noopener">Watch on YouTube &#8599;</a>
+      </div>
+    </div>
+  </dialog>
+  <script>
+    const player = document.getElementById('player');
+    const frame = document.getElementById('playerFrame');
+    const titleEl = document.getElementById('playerTitle');
+    const ytLink = document.getElementById('playerYt');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let opening = 0;
+
+    document.querySelectorAll('.card[data-video]').forEach(card => {
+      card.addEventListener('click', e => {
+        // Let ctrl/cmd/shift/middle clicks open YouTube the normal way.
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        e.preventDefault();
+        openPlayer(card);
+      });
+    });
+
+    function openPlayer(card) {
+      const id = card.dataset.video;
+      const thumb = card.querySelector('.thumb');
+      const img = thumb.querySelector('img');
+      const from = thumb.getBoundingClientRect();
+      const token = ++opening;
+
+      titleEl.textContent = card.querySelector('.title').textContent;
+      ytLink.href = card.href;
+      frame.replaceChildren();
+      frame.style.backgroundImage = img.currentSrc ? 'url("' + img.currentSrc + '")' : '';
+      player.showModal();
+
+      // The thumbnail grows into the player, then the video loads on top of it.
+      const to = frame.getBoundingClientRect();
+      const grow = frame.animate([
+        { transformOrigin: 'top left', transform: 'translate(' + (from.left - to.left) + 'px,' + (from.top - to.top) + 'px) scale(' + (from.width / to.width) + ',' + (from.height / to.height) + ')' },
+        { transformOrigin: 'top left', transform: 'none' }
+      ], { duration: reduceMotion ? 1 : 450, easing: 'cubic-bezier(.22,.7,.18,1)' });
+
+      grow.finished.then(() => {
+        if (token !== opening || !player.open) return;
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://www.youtube-nocookie.com/embed/' + id + '?autoplay=1&rel=0&playsinline=1';
+        iframe.title = titleEl.textContent;
+        iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+        iframe.allowFullscreen = true;
+        iframe.addEventListener('load', () => iframe.classList.add('is-ready'));
+        frame.appendChild(iframe);
+      }).catch(() => {});
+    }
+
+    function closePlayer() { if (player.open) player.close(); }
+    // Removing the iframe stops playback.
+    player.addEventListener('close', () => { opening++; frame.replaceChildren(); });
+    document.getElementById('playerClose').addEventListener('click', closePlayer);
+    // Clicking the dimmed area outside the player closes it.
+    player.addEventListener('click', e => {
+      const r = player.querySelector('.player-inner').getBoundingClientRect();
+      const inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+      if (!inside) closePlayer();
+    });
+  </script>
 </body>
 </html>

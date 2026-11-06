@@ -4,63 +4,29 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1020">
-  <meta name="description" content="Peter Liu — director, filmmaker, and artist.">
+  <meta name="description" content="Peter Liu — director, filmmaker, and artist based in Los Angeles.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Peter Liu — Director · Filmmaker · Artist">
+  <meta property="og:description" content="Watch the director's reel and selected works.">
+  <meta property="og:image" content="https://peterxliu.com/assets/black-cat.jpg">
+  <meta property="og:url" content="https://peterxliu.com/">
+  <meta name="twitter:card" content="summary_large_image">
   <title>Peter Liu — Director · Filmmaker · Artist</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
   <style>
-    :root {
-      color-scheme: dark;
-      --paper: #0b1020;
-      --ink: #f5f7ff;
-      --muted: rgba(245,247,255,.72);
-      --line: rgba(245,247,255,.18);
-      --ease: cubic-bezier(.22,.7,.18,1);
-    }
-    * { box-sizing: border-box; }
     html, body { min-height: 100%; }
-    body {
-      margin: 0;
-      background: var(--paper);
-      isolation: isolate;
-      color: var(--ink);
-      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      overflow-x: hidden;
-    }
-    /* Full-screen antique navy texture, kept behind every page element. */
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
-      background-image: linear-gradient(rgba(11,16,32,.30),rgba(11,16,32,.50)), url("/assets/background.png");
-      background-position: center center, center center;
-      background-size: 100% 100%, cover;
-      background-repeat: no-repeat, no-repeat;
-    }
+    body { overflow-x: hidden; }
 
-    .site-nav {
-      position: fixed;
-      top: 30px;
-      right: 34px;
-      z-index: 30;
-      display: flex;
-      align-items: center;
-      gap: clamp(16px, 2.5vw, 32px);
-    }
-    .site-nav a {
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 12px;
-      letter-spacing: .13em;
-      text-transform: uppercase;
-      transition: color 180ms ease;
-    }
-    .site-nav a:hover { color: var(--ink); }
+    /* Home page header has no brand (the name is on the page), so keep the nav on the right. */
+    .site-header { justify-content: flex-end; }
+
     .page {
+      width: 100%;
+      margin: 0;
       min-height: 100svh;
       display: grid;
       place-items: center;
@@ -97,11 +63,8 @@
       inset: 0;
       overflow: hidden;
       background: url("assets/black-cat.jpg") center 42% / cover no-repeat;
-      filter: none;
-      transition: transform 1.1s var(--ease), filter 1.1s var(--ease);
+      transition: transform 1.1s var(--ease);
     }
-    .portrait-art::before { content: none; }
-    .portrait-art::after { content: none; }
 
     /* The flying copy of the portrait. Same image, same crop rule as the
        button, so it matches the original exactly at the start and lands
@@ -114,16 +77,6 @@
       background: url("assets/black-cat.jpg") center 42% / cover no-repeat;
       will-change: left, top, width, height, opacity;
     }
-    .portrait-caption {
-      position: absolute;
-      left: 16px;
-      bottom: 14px;
-      color: rgba(255,255,255,.8);
-      font-size: 12px;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-      z-index: 2;
-    }
     .name {
       margin: 27px 0 0;
       font-family: "Montserrat", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -134,7 +87,7 @@
     }
     .role {
       margin: 11px 0 0;
-      color: var(--muted);
+      color: var(--subtle);
       font-size: 12px;
       letter-spacing: .2em;
       text-transform: uppercase;
@@ -182,7 +135,7 @@
       justify-content: space-between;
       gap: 20px;
       margin-top: 14px;
-      color: var(--muted);
+      color: var(--subtle);
       font-size: 12px;
       letter-spacing: .16em;
       text-transform: uppercase;
@@ -195,11 +148,15 @@
     }
     .back {
       position: fixed;
-      top: 28px;
-      left: 30px;
+      top: 30px;
+      left: 34px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      z-index: 30;
       border: 0;
       background: transparent;
-      color: var(--muted);
+      color: var(--subtle);
       padding: 8px 0;
       font: inherit;
       font-size: 12px;
@@ -211,28 +168,27 @@
       transition: opacity 500ms ease;
     }
     .back.is-visible { opacity: 1; visibility: visible; }
-    .back:hover { color: var(--ink); }
+    .back:hover { color: var(--white); }
     .footer-note {
       position: fixed;
       bottom: 25px;
-      left: 30px;
-      right: 30px;
+      left: 34px;
+      right: 34px;
       display: flex;
       justify-content: space-between;
-      color: var(--muted);
+      color: var(--subtle);
       font-size: 12px;
       letter-spacing: .13em;
       text-transform: uppercase;
       pointer-events: none;
     }
     @media (max-width: 640px) {
-      .site-nav { top: 18px; right: 18px; gap: 14px; }
-      .site-nav a { font-size: 12px; letter-spacing: .07em; }
+      .site-header { position: fixed; flex-direction: row; align-items: center; top: 18px; left: 20px; right: 20px; min-height: 32px; }
       .page { padding: 70px 20px; }
       .portrait-button { width: min(72vw, 310px); }
       .reel { width: calc(100% - 32px); }
-      .back { top: 16px; left: 18px; }
-      .footer-note { left: 18px; right: 18px; bottom: 16px; }
+      .back { top: 18px; left: 20px; height: 32px; }
+      .footer-note { left: 20px; right: 20px; bottom: 16px; }
       .reel-note { font-size: 12px; letter-spacing: .1em; }
     }
     @media (prefers-reduced-motion: reduce) {
@@ -241,11 +197,13 @@
   </style>
 </head>
 <body>
-  <nav class="site-nav" aria-label="Main navigation">
-    <a href="about.html">About</a>
-    <a href="works.html">Selected Works</a>
-    <a href="contact.html">Contact</a>
-  </nav>
+  <header class="site-header">
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="about.html">About</a>
+      <a href="works.html">Selected Works</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
   <main class="page">
     <section class="landing" id="landing" aria-label="Peter Liu portfolio">
       <button class="portrait-button" id="enter" aria-label="Play Peter Liu's director reel">
@@ -267,7 +225,7 @@
     </section>
     <button class="back" id="back" type="button">← Back</button>
   </main>
-  <div class="footer-note" aria-hidden="true">
+  <div class="footer-note">
     <span>Los Angeles, California</span>
     <span>© <span id="year"></span> Peter Liu</span>
   </div>

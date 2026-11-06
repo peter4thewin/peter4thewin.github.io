@@ -4,88 +4,77 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="Get in touch with Peter Liu.">
   <title>Contact — Peter Liu</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
   <style>
-    :root { color-scheme: dark; --bg:#0b1020; --white:#f5f7ff; --muted:rgba(245,247,255,.72); }
-    * { box-sizing:border-box; }
-    body { margin:0; min-height:100svh; background:var(--bg); color:var(--white); font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; isolation:isolate; }
-    body::before {
-      content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
-      background-image: linear-gradient(rgba(11,16,32,.30),rgba(11,16,32,.50)), url("/assets/background.png");
-      background-position: center center, center center;
-      background-size: 100% 100%, cover;
-      background-repeat: no-repeat, no-repeat;
-    }
-    .brand { position:fixed; top:30px; left:34px; z-index:2; color:var(--white); text-decoration:none; font:600 30px Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.01em; }
-    nav { position:fixed; top:30px; right:34px; display:flex; gap:clamp(16px,2.5vw,32px); }
-    nav a { color:var(--muted); text-decoration:none; font-size:12px; letter-spacing:.13em; text-transform:uppercase; transition:color 180ms ease; }
-    nav a:hover, nav a.active { color:var(--white); }
-    main { min-height:100svh; width:min(100% - 48px,760px); margin:0 auto; padding:clamp(145px,20vh,205px) 0 80px; }
-    h1 { margin:0 0 28px; font:600 clamp(2.2rem,5vw,3.4rem)/1.05 Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.025em; }
-    .form-panel {
-      padding:34px 36px;
-      background:rgba(7,12,27,.68);
-      border:1px solid rgba(245,247,255,.13);
-      border-radius:8px;
-      -webkit-backdrop-filter:blur(12px);
-      backdrop-filter:blur(12px);
-      box-shadow:0 18px 55px rgba(0,0,0,.18);
-    }
+    .form-panel { padding:34px 36px; background:rgba(7,12,27,.68); border:1px solid rgba(245,247,255,.13); border-radius:8px; -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); box-shadow:0 18px 55px rgba(0,0,0,.18); }
     form { display:grid; gap:27px; }
     .field { display:grid; gap:11px; }
-    label { color:var(--muted); font-size:12px; letter-spacing:.13em; text-transform:uppercase; }
+    label { color:var(--subtle); font-size:12px; letter-spacing:.13em; text-transform:uppercase; }
     input, textarea { width:100%; border:0; border-bottom:1px solid rgba(245,247,255,.28); border-radius:0; padding:12px 0 14px; background:transparent; color:var(--white); font:16px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif; outline:none; transition:border-color 180ms ease; }
     input::placeholder, textarea::placeholder { color:rgba(245,247,255,.38); }
-    input:focus, textarea:focus { border-color:var(--white); }
+    input:focus, textarea:focus { border-color:var(--white); outline:none; }
     textarea { min-height:145px; resize:vertical; }
-    .send { justify-self:start; margin-top:8px; padding:13px 22px; border:1px solid rgba(245,247,255,.55); background:transparent; color:var(--white); font:inherit; font-size:12px; letter-spacing:.13em; text-transform:uppercase; cursor:pointer; transition:background 180ms ease,color 180ms ease; }
-    .send:hover { background:var(--white); color:var(--bg); }
-    .form-note { color:var(--muted); font-size:12px; line-height:1.6; margin:0; }
-    @media(max-width:640px) {
-      .brand { top:18px; left:20px; font-size:26px; }
-      nav { top:58px; left:18px; right:18px; justify-content:flex-end; gap:14px; }
-      nav a { font-size:12px; letter-spacing:.06em; }
-      main { width:calc(100% - 40px); padding-top:160px; }
-      .form-panel { padding:26px 20px; }
-      .brand, nav { position:absolute; }
-    }
+    .btn[type="submit"] { justify-self:start; margin-top:8px; }
+    .btn:disabled { opacity:.55; cursor:default; background:transparent; color:var(--white); }
+    .form-note { color:var(--subtle); font-size:12px; line-height:1.6; margin:0; }
+    @media (max-width:640px) { .form-panel { padding:26px 20px; } }
   </style>
 </head>
 <body>
-  <a class="brand" href="index.html">Peter Liu</a>
-  <nav aria-label="Main navigation">
-    <a href="about.html">About</a>
-    <a href="works.html">Selected Works</a>
-    <a href="contact.html" class="active" aria-current="page">Contact</a>
-  </nav>
-  <main>
-    <h1>Contact</h1>
+  <header class="site-header">
+    <a class="brand" href="index.html">Peter Liu</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="about.html">About</a>
+      <a href="works.html">Selected Works</a>
+      <a href="contact.html" class="active" aria-current="page">Contact</a>
+    </nav>
+  </header>
+  <main style="--w:760px">
+    <h1 class="page-title">Contact</h1>
     <div class="form-panel">
-    <form action="https://api.web3forms.com/submit" method="POST">
-      <input type="hidden" name="access_key" value="214aa145-0047-4341-9ede-e3f7fd6fd376">
-      <input type="hidden" name="subject" value="New message from peterxliu.com">
-      <input type="hidden" name="from_name" value="peterxliu.com">
-      <input type="hidden" name="redirect" value="https://peterxliu.com/thanks.html">
-      <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
-      <div class="field">
-        <label for="name">Your name</label>
-        <input id="name" name="name" type="text" placeholder="Name" autocomplete="name" required>
-      </div>
-      <div class="field">
-        <label for="email">Your email</label>
-        <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
-      </div>
-      <div class="field">
-        <label for="message">Message</label>
-        <textarea id="message" name="message" placeholder="Tell me a little about what you have in mind..." required></textarea>
-      </div>
-      <button class="send" type="submit">Send message&nbsp; ↗</button>
-      <p class="form-note">Your message will be sent directly to my inbox.</p>
-    </form>
+      <form action="https://api.web3forms.com/submit" method="POST" id="contactForm">
+        <input type="hidden" name="access_key" value="214aa145-0047-4341-9ede-e3f7fd6fd376">
+        <input type="hidden" name="subject" value="New message from peterxliu.com">
+        <input type="hidden" name="from_name" value="peterxliu.com">
+        <input type="hidden" name="redirect" value="https://peterxliu.com/thanks.html">
+        <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
+        <div class="field">
+          <label for="name">Your name</label>
+          <input id="name" name="name" type="text" placeholder="Name" autocomplete="name" required>
+        </div>
+        <div class="field">
+          <label for="email">Your email</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" placeholder="Tell me a little about what you have in mind..." required></textarea>
+        </div>
+        <button class="btn" type="submit">Send message&nbsp; &#8599;</button>
+        <p class="form-note">Your message will be sent directly to my inbox.</p>
+      </form>
     </div>
   </main>
+  <script>
+    // Stop double submits and show that something is happening.
+    document.getElementById('contactForm').addEventListener('submit', e => {
+      const b = e.target.querySelector('button[type="submit"]');
+      b.disabled = true;
+      b.textContent = 'Sending…';
+    });
+    // Re-enable if the browser restores this page from the back button.
+    window.addEventListener('pageshow', e => {
+      if (!e.persisted) return;
+      const b = document.querySelector('#contactForm button[type="submit"]');
+      b.disabled = false;
+      b.innerHTML = 'Send message&nbsp; ↗';
+    });
+  </script>
 </body>
 </html>

@@ -1,0 +1,131 @@
+/* Shared styles for every page. Page-specific rules stay in each page's <style>. */
+:root {
+  color-scheme: dark;
+  --bg: #0b1020;
+  --white: #f5f7ff;
+  --muted: rgba(245,247,255,.84);
+  --subtle: rgba(245,247,255,.72);
+  --accent: rgba(245,247,255,.45);
+  --line: rgba(245,247,255,.18);
+  --ease: cubic-bezier(.22,.7,.18,1);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100svh;
+  background: var(--bg);
+  color: var(--white);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  isolation: isolate;
+}
+
+/* Background photo with the navy wash over it. The url is relative to this file. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: linear-gradient(rgba(11,16,32,.30), rgba(11,16,32,.50)), url("background.webp");
+  background-position: center center, center center;
+  background-size: 100% 100%, cover;
+  background-repeat: no-repeat, no-repeat;
+}
+
+/* Header: home link on the left, nav on the right, centered on one line. */
+.site-header {
+  position: fixed;
+  top: 30px;
+  left: 34px;
+  right: 34px;
+  z-index: 10;
+  min-height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  pointer-events: none;
+}
+.site-header > * { pointer-events: auto; }
+.brand {
+  color: var(--white);
+  text-decoration: none;
+  font: 600 30px/1.2 Montserrat, "Helvetica Neue", sans-serif;
+  letter-spacing: -.01em;
+}
+.site-nav { display: flex; gap: clamp(18px, 2.5vw, 34px); margin-left: auto; }
+.site-nav a {
+  color: var(--muted);
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  transition: color 180ms ease;
+}
+.site-nav a:hover, .site-nav a.active { color: var(--white); }
+
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 4px;
+}
+
+/* Page body and title. Set --w on <main> to change the content width. */
+main {
+  width: min(100% - 64px, var(--w, 1040px));
+  margin: 0 auto;
+  padding: clamp(130px, 20vh, 200px) 0 90px;
+}
+.page-title {
+  margin: 0 0 28px;
+  font: 600 clamp(2.6rem, 5.5vw, 4rem)/1 Montserrat, "Helvetica Neue", sans-serif;
+  letter-spacing: -.03em;
+}
+.page-title::after {
+  content: "";
+  display: block;
+  width: 56px;
+  height: 2px;
+  margin-top: 24px;
+  background: var(--accent);
+}
+.intro { margin: 0; color: var(--subtle); font-size: 12px; letter-spacing: .13em; text-transform: uppercase; }
+
+/* Outlined button, shared by the contact form and the thank-you page. */
+.btn {
+  display: inline-block;
+  padding: 13px 22px;
+  border: 1px solid rgba(245,247,255,.55);
+  background: transparent;
+  color: var(--white);
+  font: inherit;
+  font-size: 12px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 180ms ease, color 180ms ease;
+}
+.btn:hover { background: var(--white); color: var(--bg); }
+
+@media (max-width: 760px) {
+  .site-header {
+    position: absolute;
+    top: 18px;
+    left: 20px;
+    right: 20px;
+    min-height: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .brand { font-size: 26px; }
+  .site-nav { margin-left: 0; gap: 18px; }
+  .site-nav a { font-size: 12px; letter-spacing: .08em; }
+  main { width: calc(100% - 40px); padding: 150px 0 64px; }
+  .page-title { font-size: 2.4rem; margin-bottom: 22px; }
+  .page-title::after { margin-top: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: .01ms !important; }
+}
