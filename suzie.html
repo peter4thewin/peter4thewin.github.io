@@ -25,7 +25,7 @@
       border-radius:6px; overflow:hidden; background:#151d35;
       box-shadow:0 20px 60px rgba(0,0,0,.45);
       transform:translateX(-50%);
-      transition:transform 700ms var(--ease), filter 700ms var(--ease), opacity 700ms var(--ease);
+      transition:none;
     }
     .cat-card img { display:block; width:100%; height:100%; object-fit:cover; pointer-events:none; -webkit-user-drag:none; }
     .cat-card[data-pos="0"]  { z-index:5; }
@@ -90,32 +90,89 @@
     const toggle = document.getElementById('toggle');
     const n = cards.length;
     const half = Math.floor(n / 2);
-    const AUTO_MS = 4500;
-    let active = 0;
-    let playing = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const MS_PER_PHOTO = 7000; // One photo moves smoothly through the center every 7 seconds.
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let phase = 0;
+    let playing = !reduceMotion;
     let hovering = false;
+    let lastFrame = null;
+    let raf = null;
+    let announced = -1;
 
-    function layout() {
-      cards.forEach((card, i) => {
-        const o = ((i - active + n + half) % n) - half;   // -half ... +half around the front photo
-        const pos = o === 0 ? '0' : Math.abs(o) <= 2 ? String(o) : (o > 0 ? 'far-r' : 'far-l');
-        card.dataset.pos = pos;
-        card.setAttribute('aria-hidden', pos.startsWith('far') ? 'true' : 'false');
-      });
-      count.textContent = (active + 1) + ' / ' + n;
-      live.textContent = 'Photo ' + (active + 1) + ' of ' + n;
+    // Map a card's fractional distance from center to its visual depth.
+    // The center card is largest; each step away gets smaller and dimmer.
+    function visualAt(distance) {
+      const d = Math.abs(distance);
+      const points = [
+        { d: 0, x: 0, scale: 1, brightness: 1, opacity: 1 },
+        { d: 1, x: .8, scale: .8, brightness: .55, opacity: 1 },
+        { d: 2, x: 1.4, scale: .62, brightness: .38, opacity: 1 },
+        { d: 3, x: 1.4, scale: .5, brightness: .38, opacity: 0 }
+      ];
+      const a = points[Math.min(2, Math.floor(d))];
+      const b = points[Math.min(3, Math.floor(d) + 1)];
+      const t = Math.min(1, d - a.d);
+      return {
+        x: (a.x + (b.x - a.x) * t) * Math.sign(distance),
+        scale: a.scale + (b.scale - a.scale) * t,
+        brightness: a.brightness + (b.brightness - a.brightness) * t,
+        opacity: a.opacity + (b.opacity - a.opacity) * t
+      };
     }
-    function go(i) { active = (i + n) % n; layout(); }
-    function setPlaying(on) { playing = on; toggle.textContent = on ? 'Pause' : 'Play'; }
-    // A person choosing a photo stops the auto-rotation; Play brings it back.
-    function manual(i) { setPlaying(false); go(i); }
 
-    document.getElementById('prev').addEventListener('click', () => manual(active - 1));
-    document.getElementById('next').addEventListener('click', () => manual(active + 1));
+    function render() {
+      const front = Math.round(phase) % n;
+      cards.forEach((card, i) => {
+        let offset = i - phase;
+        while (offset > half) offset -= n;
+        while (offset < -half) offset += n;
+
+        const v = visualAt(offset);
+        card.style.transform = `translateX(calc(-50% + var(--cw) * ${v.x})) scale(${v.scale})`;
+        card.style.filter = `brightness(${v.brightness})`;
+        card.style.opacity = v.opacity;
+        card.style.zIndex = String(10 - Math.round(Math.abs(offset) * 2));
+        card.style.pointerEvents = Math.abs(offset) < .5 ? 'auto' : (Math.abs(offset) <= 2.5 ? 'auto' : 'none');
+        card.dataset.pos = Math.abs(offset) < .5 ? '0' : (offset > 0 ? 'right' : 'left');
+        card.setAttribute('aria-hidden', Math.abs(offset) > 2.5 ? 'true' : 'false');
+      });
+
+      if (front !== announced) {
+        announced = front;
+        count.textContent = (front + 1) + ' / ' + n;
+        live.textContent = 'Photo ' + (front + 1) + ' of ' + n;
+      }
+    }
+
+    function setPlaying(on) {
+      playing = on;
+      toggle.textContent = on ? 'Pause' : 'Play';
+      lastFrame = null;
+      if (playing && raf === null) raf = requestAnimationFrame(tick);
+    }
+
+    function manual(i) {
+      setPlaying(false);
+      phase = (i + n) % n;
+      render();
+    }
+
+    function tick(timestamp) {
+      raf = null;
+      if (lastFrame !== null && playing && !hovering && !document.hidden) {
+        phase = (phase + (timestamp - lastFrame) / MS_PER_PHOTO) % n;
+        render();
+      }
+      lastFrame = timestamp;
+      if (playing) raf = requestAnimationFrame(tick);
+    }
+
+    document.getElementById('prev').addEventListener('click', () => manual(Math.round(phase) - 1));
+    document.getElementById('next').addEventListener('click', () => manual(Math.round(phase) + 1));
     toggle.addEventListener('click', () => setPlaying(!playing));
     document.addEventListener('keydown', e => {
-      if (e.key === 'ArrowLeft') manual(active - 1);
-      if (e.key === 'ArrowRight') manual(active + 1);
+      if (e.key === 'ArrowLeft') manual(Math.round(phase) - 1);
+      if (e.key === 'ArrowRight') manual(Math.round(phase) + 1);
     });
 
     // Swipe or drag to rotate; click a side photo to bring it to the front.
@@ -123,21 +180,25 @@
     stage.addEventListener('pointerdown', e => { startX = e.clientX; dragged = false; });
     stage.addEventListener('pointerup', e => {
       if (startX === null) return;
-      const dx = e.clientX - startX; startX = null;
-      if (Math.abs(dx) > 40) { dragged = true; manual(active + (dx < 0 ? 1 : -1)); }
+      const dx = e.clientX - startX;
+      startX = null;
+      if (Math.abs(dx) > 40) {
+        dragged = true;
+        manual(Math.round(phase) + (dx < 0 ? 1 : -1));
+      }
     });
     stage.addEventListener('pointercancel', () => { startX = null; });
     cards.forEach((card, i) => card.addEventListener('click', () => {
       if (dragged) { dragged = false; return; }
-      if (i !== active) manual(i);
+      if (Math.abs(i - phase) > .5) manual(i);
     }));
 
     stage.addEventListener('mouseenter', () => { hovering = true; });
-    stage.addEventListener('mouseleave', () => { hovering = false; });
-    setInterval(() => { if (playing && !hovering && !document.hidden) go(active + 1); }, AUTO_MS);
+    stage.addEventListener('mouseleave', () => { hovering = false; lastFrame = null; });
+    document.addEventListener('visibilitychange', () => { lastFrame = null; });
 
+    render();
     setPlaying(playing);
-    layout();
   </script>
 </body>
 </html>
