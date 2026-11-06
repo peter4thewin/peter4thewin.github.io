@@ -19,18 +19,16 @@
     .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 
     /* Carousel: the front photo is full size, the ones beside it step down and tuck behind it.
-       Position, scale, brightness, stacking order and the soft edge where photos overlap are all
-       set continuously by render() in the script. */
+       Position, scale, brightness and stacking order are all set continuously by render() in the script. */
     .stage { position:relative; height:calc(var(--cw) * 4 / 3); margin-top:36px; touch-action:pan-y; user-select:none; -webkit-user-select:none; }
     .cat-card {
       position:absolute; top:0; left:50%; width:var(--cw); aspect-ratio:3/4; margin:0;
-      border-radius:6px; overflow:hidden;
+      border-radius:6px; overflow:hidden; background:#151d35;
       box-shadow:0 20px 60px rgba(0,0,0,.45);
       transform:translateX(-50%);
       transition:none;
     }
-    /* The placeholder color lives on the image (not the card) so a feathered edge blends into the photo underneath. */
-    .cat-card img { display:block; width:100%; height:100%; object-fit:cover; background:#151d35; pointer-events:none; -webkit-user-drag:none; }
+    .cat-card img { display:block; width:100%; height:100%; object-fit:cover; pointer-events:none; -webkit-user-drag:none; }
     .cat-card[data-pos="left"], .cat-card[data-pos="right"] { cursor:pointer; }
 
     .controls { display:flex; align-items:center; justify-content:center; gap:22px; margin-top:34px; }
@@ -87,10 +85,12 @@
     const n = cards.length;
     const half = Math.floor(n / 2);
     const MS_PER_PHOTO = 9500; // One photo moves smoothly through the center every 9.5 seconds.
-    // Where two neighboring photos trade places in the stack, the photo on top gets a soft edge that
-    // covers only the strip where the two overlap, so the hand-off blends instead of popping.
-    // This is how close to that hand-off (in photo steps) the soft edge appears; larger = it shows for longer.
-    const FEATHER_RANGE = 0.6;
+    // Just before two neighboring photos trade places in the stack, they drift slightly apart so they
+    // no longer overlap. The order swaps while there's a small gap between them, then they drift back
+    // together with the other photo now on top.
+    const SPREAD = 0.07;       // how far each photo shifts outward at the swap, in card widths (the two photos
+                               // overlap by 0.10 card widths, so this must stay above 0.05 to open a gap)
+    const SPREAD_WIDTH = 0.4;  // how long before/after the swap the spreading lasts, in photo steps
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     let phase = 0;
     let playing = !reduceMotion;
@@ -98,7 +98,6 @@
     let lastFrame = null;
     let raf = null;
     let announced = -1;
-    let cardW = cards[0].offsetWidth;
 
     // Map a card's fractional distance from center to its visual depth.
     // The center card is largest; each step away gets smaller and dimmer.
@@ -121,58 +120,21 @@
       };
     }
 
-    // Build a horizontal alpha mask that fades the left and/or right edge of a photo.
-    // fl / fr are the fade widths as a fraction of the photo's own width.
-    function edgeMask(fl, fr) {
-      if (fl <= 0 && fr <= 0) return 'none';
-      const stops = [
-        fl > 0 ? `transparent 0%, #000 ${(fl * 100).toFixed(2)}%` : '#000 0%',
-        fr > 0 ? `#000 ${((1 - fr) * 100).toFixed(2)}%, transparent 100%` : '#000 100%'
-      ];
-      return `linear-gradient(to right, ${stops.join(', ')})`;
-    }
-
     function render() {
       const front = Math.round(phase) % n;
-
-      // 1. Where is every card right now?
-      const s = cards.map((card, i) => {
+      cards.forEach((card, i) => {
         let offset = i - phase;
         while (offset > half) offset -= n;
         while (offset < -half) offset += n;
+
         const v = visualAt(offset);
-        const w = cardW * v.scale;
-        const cx = cardW * v.x;
-        return { card, offset, v, cx, w, left: cx - w / 2, right: cx + w / 2, fl: 0, fr: 0 };
-      });
 
-      // 2. For every pair of overlapping cards, soften the edge of whichever one is on top.
-      // The strength peaks when the two are equally far from center (that's when the stacking order swaps).
-      // The fade spans exactly the overlap strip, so just before the swap "B fades into A" and just after it
-      // "A fades in over B": the strip looks identical on both sides of the swap.
-      for (let a = 0; a < n; a++) {
-        for (let b = a + 1; b < n; b++) {
-          const p = s[a], q = s[b];
-          const l = p.cx < q.cx ? p : q;
-          const r = l === p ? q : p;
-          const overlap = l.right - r.left;
-          if (overlap <= 0) continue;
+        // The stacking order swaps when two photos are equally far from center (|offset| = 0.5).
+        // Push each of them outward, peaking at that moment, so they're apart when the swap happens.
+        const u = Math.max(0, 1 - Math.abs(Math.abs(offset) - 0.5) / SPREAD_WIDTH);
+        const x = v.x + Math.sign(offset) * SPREAD * (u * u * (3 - 2 * u));
 
-          const dist = Math.abs(Math.abs(p.offset) - Math.abs(q.offset));
-          const x = Math.max(0, Math.min(1, 1 - dist / FEATHER_RANGE));
-          const strength = x * x * (3 - 2 * x);
-          if (strength <= 0) continue;
-
-          const top = Math.abs(p.offset) < Math.abs(q.offset) ? p : q;
-          const fade = Math.min(.5, (overlap * strength) / top.w);
-          if (top === l) top.fr = Math.max(top.fr, fade); // on top of the card to its right
-          else top.fl = Math.max(top.fl, fade);           // on top of the card to its left
-        }
-      }
-
-      // 3. Apply.
-      s.forEach(({ card, offset, v, fl, fr }) => {
-        card.style.transform = `translateX(calc(-50% + var(--cw) * ${v.x})) scale(${v.scale})`;
+        card.style.transform = `translateX(calc(-50% + var(--cw) * ${x})) scale(${v.scale})`;
         card.style.filter = `brightness(${v.brightness})`;
         card.style.opacity = v.opacity;
         // Stack strictly by distance from center: the closest card is always on top.
@@ -181,11 +143,6 @@
         card.style.pointerEvents = Math.abs(offset) <= 2.5 ? 'auto' : 'none';
         card.dataset.pos = Math.abs(offset) < .5 ? '0' : (offset > 0 ? 'right' : 'left');
         card.setAttribute('aria-hidden', Math.abs(offset) > 2.5 ? 'true' : 'false');
-
-        const mask = edgeMask(fl, fr);
-        const img = card.firstElementChild;
-        img.style.webkitMaskImage = mask;
-        img.style.maskImage = mask;
       });
 
       if (front !== announced) {
@@ -247,11 +204,6 @@
     stage.addEventListener('mouseenter', () => { hovering = true; });
     stage.addEventListener('mouseleave', () => { hovering = false; lastFrame = null; });
     document.addEventListener('visibilitychange', () => { lastFrame = null; });
-
-    // Card size depends on the viewport, so re-measure it when it changes.
-    if ('ResizeObserver' in window) {
-      new ResizeObserver(() => { cardW = cards[0].offsetWidth; render(); }).observe(cards[0]);
-    }
 
     render();
     setPlaying(playing);
