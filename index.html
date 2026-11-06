@@ -28,6 +28,24 @@
       -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
+    .site-nav {
+      position: fixed;
+      top: 30px;
+      right: 34px;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      gap: clamp(16px, 2.5vw, 32px);
+    }
+    .site-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+      transition: color 180ms ease;
+    }
+    .site-nav a:hover { color: var(--ink); }
     .page {
       min-height: 100svh;
       display: grid;
@@ -194,6 +212,8 @@
       pointer-events: none;
     }
     @media (max-width: 640px) {
+      .site-nav { top: 18px; right: 18px; gap: 14px; }
+      .site-nav a { font-size: 12px; letter-spacing: .07em; }
       .page { padding: 70px 20px; }
       .portrait-button { width: min(72vw, 310px); }
       .reel { width: calc(100% - 32px); }
@@ -207,6 +227,11 @@
   </style>
 </head>
 <body>
+  <nav class="site-nav" aria-label="Main navigation">
+    <a href="about.html">About</a>
+    <a href="works.html">Selected Works</a>
+    <a href="contact.html">Contact</a>
+  </nav>
   <main class="page">
     <section class="landing" id="landing" aria-label="Peter Liu portfolio">
       <button class="portrait-button" id="enter" aria-label="Play Peter Liu's director reel">
