@@ -38,7 +38,7 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      transition: opacity 450ms var(--ease), transform 600ms var(--ease), filter 450ms var(--ease);
+      transition: opacity 1000ms var(--ease), transform 1200ms var(--ease), filter 1000ms var(--ease);
     }
     .portrait-button {
       width: min(64vw, 340px);
@@ -112,8 +112,8 @@
     }
     .landing.is-leaving {
       opacity: 0;
-      transform: scale(.975);
-      filter: blur(5px);
+      transform: scale(.985);
+      filter: blur(3px);
       pointer-events: none;
     }
     .reel {
@@ -124,13 +124,13 @@
       transform: translate(-50%, -47%) scale(.995);
       opacity: 0;
       visibility: hidden;
-      transition: opacity 450ms var(--ease), transform 600ms var(--ease), visibility 0s linear 600ms;
+      transition: opacity 1000ms var(--ease), transform 1200ms var(--ease), visibility 0s linear 1200ms;
     }
     .reel.is-visible {
       opacity: 1;
       visibility: visible;
       transform: translate(-50%, -50%) scale(1);
-      transition-delay: 100ms, 100ms, 0s;
+      transition-delay: 120ms, 120ms, 0s;
     }
     .video-frame {
       width: 100%;
@@ -260,7 +260,7 @@
       landing.classList.add('is-leaving');
       reel.classList.add('is-visible');
       back.classList.add('is-visible');
-      window.setTimeout(() => landing.hidden = true, 700);
+      window.setTimeout(() => landing.hidden = true, 1300);
       if (player) {
         player.playVideo();
       }
