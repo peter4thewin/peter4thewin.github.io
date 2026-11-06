@@ -214,7 +214,7 @@
 
     <section class="reel" id="reel" aria-label="Director's reel">
       <div class="video-frame">
-        <iframe id="directorVideo" title="Peter Liu — Director's Reel" src="" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        <div id="directorVideo" title="Peter Liu — Director's Reel"></div>
       </div>
       <div class="reel-note">
         <span>Peter Liu</span>
@@ -232,6 +232,27 @@
     const reel = document.getElementById('reel');
     const video = document.getElementById('directorVideo');
     const enter = document.getElementById('enter');
+    let player = null;
+
+    window.onYouTubeIframeAPIReady = () => {
+      player = new YT.Player('directorVideo', {
+        videoId: 'PqKCBEA_CDw',
+        playerVars: {
+          autoplay: 0,
+          playsinline: 1,
+          rel: 0,
+          enablejsapi: 1,
+          origin: window.location.origin
+        },
+        events: {
+          onReady: () => {}
+        }
+      });
+    };
+
+    const youtubeApi = document.createElement('script');
+    youtubeApi.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(youtubeApi);
     const back = document.getElementById('back');
     document.getElementById('year').textContent = new Date().getFullYear();
 
@@ -240,11 +261,16 @@
       reel.classList.add('is-visible');
       back.classList.add('is-visible');
       window.setTimeout(() => landing.hidden = true, 700);
-      video.src = 'https://www.youtube-nocookie.com/embed/PqKCBEA_CDw?autoplay=1&playsinline=1&rel=0&enablejsapi=1';
+      if (player) {
+        player.playVideo();
+      }
     });
 
     back.addEventListener('click', () => {
-      video.src = '';
+      if (player) {
+        player.pauseVideo();
+        player.seekTo(0, true);
+      }
       landing.hidden = false;
       requestAnimationFrame(() => {
         landing.classList.remove('is-leaving');
