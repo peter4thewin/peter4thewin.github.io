@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <title>Contact — Peter Liu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: dark; --bg:#0b1020; --white:#f5f7ff; --muted:rgba(245,247,255,.72); }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100svh; background:var(--bg); color:var(--white); font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; }
+    .brand { position:fixed; top:30px; left:34px; color:var(--white); text-decoration:none; font:600 16px Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.01em; }
+    nav { position:fixed; top:30px; right:34px; display:flex; gap:clamp(16px,2.5vw,32px); }
+    nav a { color:var(--muted); text-decoration:none; font-size:12px; letter-spacing:.13em; text-transform:uppercase; transition:color 180ms ease; }
+    nav a:hover, nav a.active { color:var(--white); }
+    main { min-height:100svh; width:min(100% - 48px,1120px); margin:0 auto; padding:clamp(150px,22vh,230px) 0 80px; }
+    h1 { margin:0; font:600 clamp(2.2rem,5vw,3.4rem)/1.05 Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.025em; }
+    .intro { margin:18px 0 0; color:var(--muted); font-size:12px; letter-spacing:.13em; text-transform:uppercase; }
+    @media(max-width:640px) {
+      .brand { top:18px; left:18px; font-size:14px; }
+      nav { top:58px; left:18px; right:18px; justify-content:flex-end; gap:14px; }
+      nav a { font-size:12px; letter-spacing:.06em; }
+      main { width:calc(100% - 40px); padding-top:180px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="brand" href="index.html">Peter Liu</a>
+  <nav aria-label="Main navigation">
+    <a href="about.html">About</a>
+    <a href="works.html">Selected Works</a>
+    <a href="contact.html" class="active" aria-current="page">Contact</a>
+  </nav>
+  <main>
+    <h1>Contact</h1>
+    <p class="intro">Get in touch.</p>
+  </main>
+</body>
+</html>
