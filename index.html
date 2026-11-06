@@ -53,6 +53,28 @@
       outline-offset: 8px;
       isolation: isolate;
     }
+    .portrait-transition {
+      position: fixed;
+      z-index: 10;
+      margin: 0;
+      padding: 0;
+      aspect-ratio: auto;
+      transform: none;
+      pointer-events: none;
+      transition:
+        left 1200ms cubic-bezier(.22,.7,.18,1),
+        top 1200ms cubic-bezier(.22,.7,.18,1),
+        width 1200ms cubic-bezier(.22,.7,.18,1),
+        height 1200ms cubic-bezier(.22,.7,.18,1),
+        border-radius 1200ms cubic-bezier(.22,.7,.18,1);
+    }
+    .portrait-transition.is-expanded {
+      left: 50% !important;
+      top: 50% !important;
+      width: min(calc(100vw - 48px), 1120px) !important;
+      height: min(calc((100vw - 48px) * 0.5625), 630px) !important;
+      transform: translate(-50%, -50%);
+    }
     .portrait-art {
       position: absolute;
       inset: 0;
@@ -256,14 +278,41 @@
     const back = document.getElementById('back');
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    enter.addEventListener('click', async () => {
+    enter.addEventListener('click', () => {
+      if (landing.classList.contains('is-leaving')) return;
+
+      const start = enter.getBoundingClientRect();
+      const transitionPortrait = enter.cloneNode(true);
+      transitionPortrait.removeAttribute('id');
+      transitionPortrait.setAttribute('aria-hidden', 'true');
+      transitionPortrait.tabIndex = -1;
+      transitionPortrait.classList.add('portrait-transition');
+      Object.assign(transitionPortrait.style, {
+        left: start.left + 'px',
+        top: start.top + 'px',
+        width: start.width + 'px',
+        height: start.height + 'px'
+      });
+      document.body.appendChild(transitionPortrait);
+
       landing.classList.add('is-leaving');
       reel.classList.add('is-visible');
       back.classList.add('is-visible');
-      window.setTimeout(() => landing.hidden = true, 1300);
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          transitionPortrait.classList.add('is-expanded');
+        });
+      });
+
       if (player) {
         player.playVideo();
       }
+
+      window.setTimeout(() => {
+        transitionPortrait.remove();
+        landing.hidden = true;
+      }, 1300);
     });
 
     back.addEventListener('click', () => {
