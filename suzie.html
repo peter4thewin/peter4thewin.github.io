@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="Photos of Suzie, Peter Liu's cat.">
+  <title>Suzie — Peter Liu</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/site.css">
+  <style>
+    html, body { overflow-x: clip; }
+    main { padding-top: clamp(110px, 15vh, 150px); padding-bottom: 60px; }
+    .cats { --cw: clamp(170px, min(26vw, 44svh), 360px); }
+    .cats .page-title { margin-bottom: 0; }
+    .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+
+    /* Carousel: the front photo is full size, the ones beside it step down and tuck behind it. */
+    .stage { position:relative; height:calc(var(--cw) * 4 / 3); margin-top:36px; touch-action:pan-y; user-select:none; -webkit-user-select:none; }
+    .cat-card {
+      position:absolute; top:0; left:50%; width:var(--cw); aspect-ratio:3/4; margin:0;
+      border-radius:6px; overflow:hidden; background:#151d35;
+      box-shadow:0 20px 60px rgba(0,0,0,.45);
+      transform:translateX(-50%);
+      transition:transform 700ms var(--ease), filter 700ms var(--ease), opacity 700ms var(--ease);
+    }
+    .cat-card img { display:block; width:100%; height:100%; object-fit:cover; pointer-events:none; -webkit-user-drag:none; }
+    .cat-card[data-pos="0"]  { z-index:5; }
+    .cat-card[data-pos="1"]  { z-index:4; cursor:pointer; filter:brightness(.55); transform:translateX(calc(-50% + var(--cw) * .8)) scale(.8); }
+    .cat-card[data-pos="-1"] { z-index:4; cursor:pointer; filter:brightness(.55); transform:translateX(calc(-50% - var(--cw) * .8)) scale(.8); }
+    .cat-card[data-pos="2"]  { z-index:3; cursor:pointer; filter:brightness(.38); transform:translateX(calc(-50% + var(--cw) * 1.4)) scale(.62); }
+    .cat-card[data-pos="-2"] { z-index:3; cursor:pointer; filter:brightness(.38); transform:translateX(calc(-50% - var(--cw) * 1.4)) scale(.62); }
+    .cat-card[data-pos="far-r"] { z-index:1; opacity:0; pointer-events:none; transform:translateX(calc(-50% + var(--cw) * 1.4)) scale(.5); }
+    .cat-card[data-pos="far-l"] { z-index:1; opacity:0; pointer-events:none; transform:translateX(calc(-50% - var(--cw) * 1.4)) scale(.5); }
+
+    .controls { display:flex; align-items:center; justify-content:center; gap:22px; margin-top:34px; }
+    .controls .btn { width:44px; height:44px; padding:0; display:grid; place-items:center; font-size:16px; letter-spacing:0; }
+    .count { min-width:64px; text-align:center; color:var(--subtle); font-size:12px; letter-spacing:.13em; }
+    .toggle { margin-left:12px; padding:8px 0; border:0; background:transparent; color:var(--muted); font:inherit; font-size:12px; letter-spacing:.13em; text-transform:uppercase; cursor:pointer; transition:color 180ms ease; }
+    .toggle:hover { color:var(--white); }
+
+    @media (max-width:700px) {
+      .cats { --cw: min(58vw, 40svh); }
+      main { padding-top: 150px; }
+      .cat-card[data-pos="2"], .cat-card[data-pos="-2"] { opacity:0; pointer-events:none; }
+      .controls { gap:16px; }
+      .toggle { margin-left:4px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="index.html">Peter Liu</a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="about.html">About</a>
+      <a href="works.html">Selected Works</a>
+      <a href="suzie.html" class="active" aria-current="page">Suzie</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </header>
+  <main class="cats" style="--w:1280px">
+    <h1 class="page-title">Suzie</h1>
+    <section aria-roledescription="carousel" aria-label="Photos of Suzie">
+      <div class="stage" id="stage">
+      <figure class="cat-card" role="group" aria-roledescription="slide" aria-label="1 of 7"><img src="assets/cats/cat-1.jpg" alt="Suzie, a black cat, in close-up with bright green eyes reaching toward the camera" width="900" height="1200" draggable="false" decoding="async"></figure>
+      <figure class="cat-card" role="group" aria-roledescription="slide" aria-label="2 of 7"><img src="assets/cats/cat-2.jpg" alt="Suzie standing on an orange rug and looking at the camera" width="900" height="1200" draggable="false" decoding="async"></figure>
+      <figure class="cat-card" role="group" aria-roledescription="slide" aria-label="3 of 7"><img src="assets/cats/cat-3.jpg" alt="Suzie sitting on an orange armchair beside a window" width="900" height="1200" draggable="false" decoding="async"></figure>
+      <figure class="cat-card" role="group" aria-roledescription="slide" aria-label="4 of 7"><img src="assets/cats/cat-4.jpg" alt="Suzie in a green holiday sweater sitting on a couch" width="900" height="1200" draggable="false" decoding="async"></figure>
+      <figure class="cat-card" role="group" aria-roledescription="slide" aria-label="5 of 7"><img src="assets/cats/cat-5.jpg" alt="Suzie lounging on top of a white printer" width="900" height="1200" draggable="false" decoding="async"></figure>
+      <figure class="cat-card" role="group" aria-roledescription="slide" aria-label="6 of 7"><img src="assets/cats/cat-6.jpg" alt="Suzie, a black cat, in close-up looking up from the floor" width="900" height="1200" draggable="false" decoding="async"></figure>
+      <figure class="cat-card" role="group" aria-roledescription="slide" aria-label="7 of 7"><img src="assets/cats/cat-7.jpg" alt="Peter lying on a couch with Suzie resting on his chest" width="900" height="1200" draggable="false" decoding="async"></figure>
+      </div>
+      <div class="controls">
+        <button class="btn" type="button" id="prev" aria-label="Previous photo">&larr;</button>
+        <span class="count" id="count" aria-hidden="true"></span>
+        <button class="btn" type="button" id="next" aria-label="Next photo">&rarr;</button>
+        <button class="toggle" type="button" id="toggle">Pause</button>
+      </div>
+      <p class="sr-only" id="live" aria-live="polite"></p>
+    </section>
+  </main>
+  <script>
+    const stage = document.getElementById('stage');
+    const cards = [...stage.querySelectorAll('.cat-card')];
+    const count = document.getElementById('count');
+    const live = document.getElementById('live');
+    const toggle = document.getElementById('toggle');
+    const n = cards.length;
+    const half = Math.floor(n / 2);
+    const AUTO_MS = 4500;
+    let active = 0;
+    let playing = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let hovering = false;
+
+    function layout() {
+      cards.forEach((card, i) => {
+        const o = ((i - active + n + half) % n) - half;   // -half ... +half around the front photo
+        const pos = o === 0 ? '0' : Math.abs(o) <= 2 ? String(o) : (o > 0 ? 'far-r' : 'far-l');
+        card.dataset.pos = pos;
+        card.setAttribute('aria-hidden', pos.startsWith('far') ? 'true' : 'false');
+      });
+      count.textContent = (active + 1) + ' / ' + n;
+      live.textContent = 'Photo ' + (active + 1) + ' of ' + n;
+    }
+    function go(i) { active = (i + n) % n; layout(); }
+    function setPlaying(on) { playing = on; toggle.textContent = on ? 'Pause' : 'Play'; }
+    // A person choosing a photo stops the auto-rotation; Play brings it back.
+    function manual(i) { setPlaying(false); go(i); }
+
+    document.getElementById('prev').addEventListener('click', () => manual(active - 1));
+    document.getElementById('next').addEventListener('click', () => manual(active + 1));
+    toggle.addEventListener('click', () => setPlaying(!playing));
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') manual(active - 1);
+      if (e.key === 'ArrowRight') manual(active + 1);
+    });
+
+    // Swipe or drag to rotate; click a side photo to bring it to the front.
+    let startX = null, dragged = false;
+    stage.addEventListener('pointerdown', e => { startX = e.clientX; dragged = false; });
+    stage.addEventListener('pointerup', e => {
+      if (startX === null) return;
+      const dx = e.clientX - startX; startX = null;
+      if (Math.abs(dx) > 40) { dragged = true; manual(active + (dx < 0 ? 1 : -1)); }
+    });
+    stage.addEventListener('pointercancel', () => { startX = null; });
+    cards.forEach((card, i) => card.addEventListener('click', () => {
+      if (dragged) { dragged = false; return; }
+      if (i !== active) manual(i);
+    }));
+
+    stage.addEventListener('mouseenter', () => { hovering = true; });
+    stage.addEventListener('mouseleave', () => { hovering = false; });
+    setInterval(() => { if (playing && !hovering && !document.hidden) go(active + 1); }, AUTO_MS);
+
+    setPlaying(playing);
+    layout();
+  </script>
+</body>
+</html>

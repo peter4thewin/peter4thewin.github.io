@@ -13,7 +13,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/site.css">
   <style>
-    .intro { margin-bottom:48px; }
+    .page-title { margin-bottom:0; }
+    .suzie { display:block; width:min(100%,240px); height:auto; aspect-ratio:3/4; margin:36px 0 32px; object-fit:cover; border-radius:6px; background:#151d35; box-shadow:0 20px 60px rgba(0,0,0,.35); }
+    .intro { margin-bottom:32px; }
   </style>
 </head>
 <body>
@@ -22,12 +24,19 @@
     <nav class="site-nav" aria-label="Main navigation">
       <a href="/about.html">About</a>
       <a href="/works.html">Selected Works</a>
+      <a href="/suzie.html">Suzie</a>
       <a href="/contact.html">Contact</a>
     </nav>
   </header>
   <main style="--w:760px">
-    <h1 class="page-title">Page not found</h1>
-    <p class="intro">That page doesn't exist or has moved.</p>
+    <h1 class="page-title">404</h1>
+    <img class="suzie" id="suzie" alt="Suzie, looking unbothered that this page is missing" width="900" height="1200">
+    <script>
+      // A different photo of Suzie each time this page loads.
+      document.getElementById('suzie').src = '/assets/cats/cat-' + (1 + Math.floor(Math.random() * 7)) + '.jpg';
+    </script>
+    <noscript><img class="suzie" src="/assets/cats/cat-1.jpg" alt="Suzie" width="900" height="1200"></noscript>
+    <p class="intro">Page not found. It doesn't exist or has moved.</p>
     <a class="btn" href="/">Back to home</a>
   </main>
 </body>
