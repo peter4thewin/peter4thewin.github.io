@@ -12,18 +12,29 @@
     :root { color-scheme: dark; --bg:#0b1020; --white:#f5f7ff; --muted:rgba(245,247,255,.72); }
     * { box-sizing:border-box; }
     body { margin:0; min-height:100svh; background:var(--bg); color:var(--white); font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; }
-    .brand { position:fixed; top:30px; left:34px; color:var(--white); text-decoration:none; font:600 16px Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.01em; }
-    nav { position:fixed; top:30px; right:34px; display:flex; gap:clamp(16px,2.5vw,32px); }
+    .brand { position:fixed; top:30px; left:34px; color:var(--white); text-decoration:none; font:600 16px Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.01em; z-index:5; }
+    nav { position:fixed; top:30px; right:34px; display:flex; gap:clamp(16px,2.5vw,32px); z-index:5; }
     nav a { color:var(--muted); text-decoration:none; font-size:12px; letter-spacing:.13em; text-transform:uppercase; transition:color 180ms ease; }
     nav a:hover, nav a.active { color:var(--white); }
     main { min-height:100svh; width:min(100% - 48px,1120px); margin:0 auto; padding:clamp(150px,22vh,230px) 0 80px; }
     h1 { margin:0; font:600 clamp(2.2rem,5vw,3.4rem)/1.05 Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.025em; }
     .intro { margin:18px 0 0; color:var(--muted); font-size:12px; letter-spacing:.13em; text-transform:uppercase; }
+    .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:44px 28px; margin-top:56px; }
+    .card { display:block; color:var(--white); text-decoration:none; }
+    .thumb { position:relative; aspect-ratio:16/9; overflow:hidden; background:rgba(245,247,255,.06); }
+    .thumb img { width:100%; height:100%; object-fit:cover; display:block; transition:transform 500ms ease, opacity 300ms ease; }
+    .thumb::after { content:"↗"; position:absolute; right:12px; bottom:10px; font-size:18px; opacity:0; transform:translate(-4px,4px); transition:opacity 220ms ease, transform 220ms ease; }
+    .card:hover .thumb img, .card:focus-visible .thumb img { transform:scale(1.04); opacity:.8; }
+    .card:hover .thumb::after, .card:focus-visible .thumb::after { opacity:1; transform:none; }
+    .card:focus-visible { outline:1px solid var(--white); outline-offset:6px; }
+    .title { margin:16px 0 0; font:600 16px Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.01em; }
+    @media(max-width:900px) { .grid { grid-template-columns:repeat(2,1fr); } }
     @media(max-width:640px) {
       .brand { top:18px; left:18px; font-size:14px; }
       nav { top:58px; left:18px; right:18px; justify-content:flex-end; gap:14px; }
       nav a { font-size:12px; letter-spacing:.06em; }
       main { width:calc(100% - 40px); padding-top:180px; }
+      .grid { grid-template-columns:1fr; gap:36px; margin-top:44px; }
     }
   </style>
 </head>
@@ -37,6 +48,32 @@
   <main>
     <h1>Selected Works</h1>
     <p class="intro">A selection of directing and creative projects.</p>
+    <div class="grid">
+      <a class="card" href="https://www.youtube.com/watch?v=pHZ_qz2Vkz8" target="_blank" rel="noopener">
+        <div class="thumb"><img src="https://i.ytimg.com/vi/pHZ_qz2Vkz8/hqdefault.jpg" alt="Roach" loading="lazy"></div>
+        <p class="title">Roach</p>
+      </a>
+      <a class="card" href="https://www.youtube.com/watch?v=QZl37rkPiXQ" target="_blank" rel="noopener">
+        <div class="thumb"><img src="https://i.ytimg.com/vi/QZl37rkPiXQ/hqdefault.jpg" alt="Lemon Empire" loading="lazy"></div>
+        <p class="title">Lemon Empire</p>
+      </a>
+      <a class="card" href="https://www.youtube.com/watch?v=X3WXsws7k0Q" target="_blank" rel="noopener">
+        <div class="thumb"><img src="https://i.ytimg.com/vi/X3WXsws7k0Q/hqdefault.jpg" alt="Null Void" loading="lazy"></div>
+        <p class="title">Null Void</p>
+      </a>
+      <a class="card" href="https://www.youtube.com/watch?v=yDEvM83Ux2U" target="_blank" rel="noopener">
+        <div class="thumb"><img src="https://i.ytimg.com/vi/yDEvM83Ux2U/hqdefault.jpg" alt="The Spooky Roommate" loading="lazy"></div>
+        <p class="title">The Spooky Roommate</p>
+      </a>
+      <a class="card" href="https://www.youtube.com/watch?v=P9mMHnez764" target="_blank" rel="noopener">
+        <div class="thumb"><img src="https://i.ytimg.com/vi/P9mMHnez764/hqdefault.jpg" alt="Fight Night" loading="lazy"></div>
+        <p class="title">Fight Night</p>
+      </a>
+      <a class="card" href="https://www.youtube.com/watch?v=uTym0YRT8Uc" target="_blank" rel="noopener">
+        <div class="thumb"><img src="https://i.ytimg.com/vi/uTym0YRT8Uc/hqdefault.jpg" alt="The Sleep Leach" loading="lazy"></div>
+        <p class="title">The Sleep Leach</p>
+      </a>
+    </div>
   </main>
 </body>
 </html>
