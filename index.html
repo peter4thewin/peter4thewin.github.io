@@ -38,7 +38,11 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      transition: opacity 1000ms var(--ease), transform 1200ms var(--ease), filter 1000ms var(--ease);
+      transition: opacity 450ms ease;
+    }
+    .landing.is-leaving {
+      opacity: 0;
+      pointer-events: none;
     }
     .portrait-button {
       width: min(64vw, 340px);
@@ -53,33 +57,6 @@
       outline-offset: 8px;
       isolation: isolate;
     }
-    .portrait-morph {
-      position: fixed;
-      z-index: 20;
-      overflow: hidden;
-      pointer-events: none;
-      background: transparent;
-      will-change: left, top, width, height;
-      transition:
-        left 1250ms cubic-bezier(.65,0,.35,1),
-        top 1250ms cubic-bezier(.65,0,.35,1),
-        width 1250ms cubic-bezier(.65,0,.35,1),
-        height 1250ms cubic-bezier(.65,0,.35,1);
-    }
-    .portrait-morph .portrait-art {
-      position: absolute;
-      inset: auto;
-      left: 50%;
-      top: 50%;
-      width: 100%;
-      height: 125%;
-      transform: translate(-50%, -50%);
-      transition: opacity 350ms ease;
-      will-change: opacity;
-    }
-    .portrait-morph.is-revealing .portrait-art {
-      opacity: 0;
-    }
     .portrait-art {
       position: absolute;
       inset: 0;
@@ -90,6 +67,18 @@
     }
     .portrait-art::before { content: none; }
     .portrait-art::after { content: none; }
+
+    /* The flying copy of the portrait. Same image, same crop rule as the
+       button, so it matches the original exactly at the start and lands
+       exactly on the video frame at the end. Its box is animated from JS. */
+    .portrait-morph {
+      position: fixed;
+      z-index: 20;
+      overflow: hidden;
+      pointer-events: none;
+      background: url("assets/black-cat.jpg") center 42% / cover no-repeat;
+      will-change: left, top, width, height, opacity;
+    }
     .portrait-caption {
       position: absolute;
       left: 16px;
@@ -115,34 +104,27 @@
       letter-spacing: .2em;
       text-transform: uppercase;
     }
-    .landing.is-leaving {
-      opacity: 0;
-      transform: scale(.985);
-      filter: blur(3px);
-      pointer-events: none;
-    }
     .reel {
       width: min(100%, 1120px);
       position: absolute;
       left: 50%;
       top: 50%;
-      transform: translate(-50%, -47%) scale(.995);
+      transform: translate(-50%, -50%);
       opacity: 0;
       visibility: hidden;
-      transition: opacity 750ms ease, transform 0s, visibility 0s linear 750ms;
+      transition: opacity 750ms ease, visibility 0s linear 750ms;
     }
+    /* Laid out in its final position but invisible, so JS can measure it. */
     .reel.is-preparing {
       opacity: 0;
       visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
       transition: none;
     }
+    /* Switches on instantly, while the portrait is still covering it. */
     .reel.is-visible {
       opacity: 1;
       visibility: visible;
-      transform: translate(-50%, -50%) scale(1);
-      transition: opacity 350ms ease;
-      transition-delay: 0s;
+      transition: none;
     }
     .video-frame {
       width: 100%;
@@ -167,6 +149,12 @@
       font-size: 9px;
       letter-spacing: .16em;
       text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 300ms ease;
+    }
+    .reel.is-visible .reel-note {
+      opacity: 1;
+      transition: opacity 700ms ease 250ms;
     }
     .back {
       position: fixed;
@@ -242,9 +230,21 @@
   <script>
     const landing = document.getElementById('landing');
     const reel = document.getElementById('reel');
-    const video = document.getElementById('directorVideo');
+    const frame = reel.querySelector('.video-frame');
     const enter = document.getElementById('enter');
+    const back = document.getElementById('back');
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Transition tuning
+    const EXPAND_MS = 1000;                  // portrait grows into the video frame
+    const FADE_MS = 700;                     // portrait dissolves to reveal the video
+    const EASE = 'cubic-bezier(.72, 0, .16, 1)';
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     let player = null;
+    let playerReady = false;
+    let playWhenReady = false;
+    let busy = false;
 
     window.onYouTubeIframeAPIReady = () => {
       player = new YT.Player('directorVideo', {
@@ -254,10 +254,14 @@
           playsinline: 1,
           rel: 0,
           enablejsapi: 1,
-          origin: window.location.origin
+          // file:// pages report origin "null", which makes the player error out
+          ...(location.protocol.startsWith('http') ? { origin: location.origin } : {})
         },
         events: {
-          onReady: () => {}
+          onReady: () => {
+            playerReady = true;
+            if (playWhenReady) player.playVideo();
+          }
         }
       });
     };
@@ -265,84 +269,70 @@
     const youtubeApi = document.createElement('script');
     youtubeApi.src = 'https://www.youtube.com/iframe_api';
     document.head.appendChild(youtubeApi);
-    const back = document.getElementById('back');
-    document.getElementById('year').textContent = new Date().getFullYear();
 
-    enter.addEventListener('click', () => {
-      if (landing.classList.contains('is-leaving')) return;
+    const px = n => n + 'px';
+    const box = r => ({ left: px(r.left), top: px(r.top), width: px(r.width), height: px(r.height) });
 
-      const start = enter.getBoundingClientRect();
-      const portraitMorph = document.createElement('div');
-      portraitMorph.className = 'portrait-morph';
-      portraitMorph.setAttribute('aria-hidden', 'true');
-      const portraitArt = enter.querySelector('.portrait-art').cloneNode(true);
-      portraitMorph.appendChild(portraitArt);
+    enter.addEventListener('click', async () => {
+      if (busy || landing.classList.contains('is-leaving')) return;
+      busy = true;
 
-      Object.assign(portraitMorph.style, {
-        left: start.left + 'px',
-        top: start.top + 'px',
-        width: start.width + 'px',
-        height: start.height + 'px'
-      });
-      document.body.appendChild(portraitMorph);
+      const from = enter.getBoundingClientRect();
 
-      landing.classList.add('is-leaving');
+      // Lay the reel out in its final spot (still invisible) and measure the real
+      // video frame, so the portrait lands on it to the pixel.
       reel.classList.add('is-preparing');
+      const to = frame.getBoundingClientRect();
+
+      const morph = document.createElement('div');
+      morph.className = 'portrait-morph';
+      morph.setAttribute('aria-hidden', 'true');
+      Object.assign(morph.style, box(from));
+      document.body.appendChild(morph);
+
+      landing.inert = true;
+      landing.classList.add('is-leaving');
+
+      // Start playback inside the click so mobile browsers allow it.
+      if (playerReady) player.playVideo();
+      else playWhenReady = true;
+
+      // 1) Expand: portrait box grows into the video frame.
+      const grow = morph.animate([box(from), box(to)], {
+        duration: reduceMotion ? 1 : EXPAND_MS,
+        easing: EASE,
+        fill: 'forwards'
+      });
+      await grow.finished;
+
+      // 2) Reveal: the portrait is now exactly covering the video frame.
+      //    Switch the video on underneath it, then dissolve the portrait.
+      reel.classList.add('is-visible');
+      reel.classList.remove('is-preparing');
       back.classList.add('is-visible');
 
-      const reelWidth = reel.clientWidth;
-      const reelHeight = reelWidth * 9 / 16;
-      const target = {
-        left: (window.innerWidth - reelWidth) / 2,
-        top: (window.innerHeight - reelHeight) / 2,
-        width: reelWidth,
-        height: reelHeight
-      };
-
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          Object.assign(portraitMorph.style, {
-            left: target.left + 'px',
-            top: target.top + 'px',
-            width: target.width + 'px',
-            height: target.height + 'px'
-          });
-        });
+      const fade = morph.animate([{ opacity: 1 }, { opacity: 0 }], {
+        duration: reduceMotion ? 1 : FADE_MS,
+        easing: 'ease',
+        fill: 'forwards'
       });
+      await fade.finished;
 
-      if (player) {
-        player.playVideo();
-      }
-
-      // Begin dissolving the portrait during the final part of its expansion.
-      window.setTimeout(() => {
-        portraitMorph.classList.add('is-revealing');
-      }, 800);
-
-      // Start revealing the video slightly before the portrait dissolves,
-      // so the video is already visible underneath as the portrait fades away.
-      window.setTimeout(() => {
-        reel.classList.add('is-visible');
-      }, 700);
-
-      window.setTimeout(() => {
-        portraitMorph.remove();
-        landing.hidden = true;
-        reel.classList.remove('is-preparing');
-      }, 2050);
+      morph.remove();
+      busy = false;
     });
 
     back.addEventListener('click', () => {
-      if (player) {
+      if (busy) return;
+      playWhenReady = false;
+      if (playerReady) {
         player.pauseVideo();
         player.seekTo(0, true);
       }
-      landing.hidden = false;
-      requestAnimationFrame(() => {
-        landing.classList.remove('is-leaving');
-        reel.classList.remove('is-visible');
-        back.classList.remove('is-visible');
-      });
+      landing.inert = false;
+      landing.classList.remove('is-leaving');
+      reel.classList.remove('is-visible');
+      back.classList.remove('is-visible');
     });
   </script>
 </body>
