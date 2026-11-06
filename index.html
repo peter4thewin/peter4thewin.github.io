@@ -320,10 +320,11 @@
         portraitMorph.classList.add('is-revealing');
       }, 800);
 
-      // Bring in the reel just before the expansion finishes, overlapping the dissolve.
+      // Start revealing the video slightly before the portrait dissolves,
+      // so the video is already visible underneath as the portrait fades away.
       window.setTimeout(() => {
         reel.classList.add('is-visible');
-      }, 1050);
+      }, 700);
 
       window.setTimeout(() => {
         portraitMorph.remove();
