@@ -336,10 +336,15 @@
         player.playVideo();
       }
 
+      // Begin dissolving the portrait during the final part of its expansion.
+      window.setTimeout(() => {
+        portraitMorph.classList.add('is-revealing');
+      }, 800);
+
+      // Bring in the reel just before the expansion finishes, overlapping the dissolve.
       window.setTimeout(() => {
         reel.classList.add('is-visible');
-        portraitMorph.classList.add('is-revealing');
-      }, 1250);
+      }, 1050);
 
       window.setTimeout(() => {
         portraitMorph.remove();
