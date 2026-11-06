@@ -130,11 +130,10 @@
         const v = visualAt(offset);
         card.style.transform = `translateX(calc(-50% + var(--cw) * ${v.x})) scale(${v.scale})`;
         card.style.filter = `brightness(${v.brightness})`;
-        // Briefly soften the image as its overlap depth changes, hiding the discrete layer swap.
-        const depthFraction = Math.abs(offset) % 1;
-        const overlapFade = .72 + .28 * Math.min(1, Math.abs(depthFraction - .5) / .10);
-        card.style.opacity = v.opacity * overlapFade;
-        card.style.zIndex = String(10 - Math.round(Math.abs(offset) * 2));
+        card.style.opacity = v.opacity;
+        // Keep overlapping cards in a stable stacking layer. The layer changes only
+        // once a card has moved far enough away that its edges no longer overlap.
+        card.style.zIndex = Math.abs(offset) < 1.3 ? '10' : '1';
         card.style.pointerEvents = Math.abs(offset) < .5 ? 'auto' : (Math.abs(offset) <= 2.5 ? 'auto' : 'none');
         card.dataset.pos = Math.abs(offset) < .5 ? '0' : (offset > 0 ? 'right' : 'left');
         card.setAttribute('aria-hidden', Math.abs(offset) > 2.5 ? 'true' : 'false');
