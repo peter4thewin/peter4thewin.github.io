@@ -139,11 +139,11 @@
       position: relative;
       box-shadow: 0 24px 80px rgba(0,0,0,.12);
     }
-    video {
+    .video-frame iframe {
       display: block;
       width: 100%;
       height: 100%;
-      object-fit: contain;
+      border: 0;
       background: #171816;
     }
     .reel-note {
@@ -214,10 +214,7 @@
 
     <section class="reel" id="reel" aria-label="Director's reel">
       <div class="video-frame">
-        <video id="directorVideo" controls playsinline preload="metadata">
-          <source src="reel.mp4" type="video/mp4">
-          Your browser does not support HTML video.
-        </video>
+        <iframe id="directorVideo" title="Peter Liu — Director's Reel" src="" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
       </div>
       <div class="reel-note">
         <span>Peter Liu</span>
@@ -243,14 +240,11 @@
       reel.classList.add('is-visible');
       back.classList.add('is-visible');
       window.setTimeout(() => landing.hidden = true, 1300);
-      try { await video.play(); }
-      catch (error) {
-        // If the reel file has not been added yet, the video controls remain available.
-      }
+      video.src = 'https://www.youtube-nocookie.com/embed/PqKCBEA_CDw?autoplay=1&playsinline=1&rel=0';
     });
 
     back.addEventListener('click', () => {
-      video.pause();
+      video.src = '';
       landing.hidden = false;
       requestAnimationFrame(() => {
         landing.classList.remove('is-leaving');
