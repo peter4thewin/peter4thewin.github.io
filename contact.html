@@ -14,10 +14,10 @@
     body { margin:0; min-height:100svh; background:var(--bg); color:var(--white); font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; -webkit-font-smoothing:antialiased; isolation:isolate; }
     body::before {
       content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
-      background: linear-gradient(rgba(11,16,32,.24),rgba(11,16,32,.38)),
+      background: linear-gradient(rgba(11,16,32,.30),rgba(11,16,32,.50)),
         url("/assets/background.png") center / cover no-repeat;
     }
-    .brand { position:fixed; top:30px; left:34px; color:var(--white); text-decoration:none; font:600 32px Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.01em; }
+    .brand { position:fixed; top:30px; left:34px; z-index:2; color:var(--white); text-decoration:none; font:600 30px Montserrat,"Helvetica Neue",sans-serif; letter-spacing:-.01em; }
     nav { position:fixed; top:30px; right:34px; display:flex; gap:clamp(16px,2.5vw,32px); }
     nav a { color:var(--muted); text-decoration:none; font-size:12px; letter-spacing:.13em; text-transform:uppercase; transition:color 180ms ease; }
     nav a:hover, nav a.active { color:var(--white); }
@@ -43,7 +43,7 @@
     .send:hover { background:var(--white); color:var(--bg); }
     .form-note { color:var(--muted); font-size:12px; line-height:1.6; margin:0; }
     @media(max-width:640px) {
-      .brand { top:18px; left:18px; font-size:28px; }
+      .brand { top:18px; left:20px; font-size:26px; }
       nav { top:58px; left:18px; right:18px; justify-content:flex-end; gap:14px; }
       nav a { font-size:12px; letter-spacing:.06em; }
       main { width:calc(100% - 40px); padding-top:160px; }
