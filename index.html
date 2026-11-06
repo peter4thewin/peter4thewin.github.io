@@ -305,7 +305,7 @@
       reel.classList.add('is-visible');
       back.classList.add('is-visible');
 
-      const reelWidth = Math.min(window.innerWidth - (window.innerWidth <= 640 ? 32 : 48), 1120);
+      const reelWidth = reel.clientWidth;
       const reelHeight = reelWidth * 9 / 16;
       const target = {
         left: (window.innerWidth - reelWidth) / 2,
