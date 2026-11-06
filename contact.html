@@ -29,7 +29,6 @@
     .send { justify-self:start; margin-top:8px; padding:13px 22px; border:1px solid rgba(245,247,255,.55); background:transparent; color:var(--white); font:inherit; font-size:12px; letter-spacing:.13em; text-transform:uppercase; cursor:pointer; transition:background 180ms ease,color 180ms ease; }
     .send:hover { background:var(--white); color:var(--bg); }
     .form-note { color:var(--muted); font-size:12px; line-height:1.6; margin:0; }
-    .honeypot { position:absolute; left:-5000px; }
     @media(max-width:640px) {
       .brand { top:18px; left:18px; font-size:14px; }
       nav { top:58px; left:18px; right:18px; justify-content:flex-end; gap:14px; }
@@ -49,13 +48,13 @@
   <main>
     <h1>Contact</h1>
     <p class="intro">For projects, collaborations, or just to say hello.</p>
-    <form action="https://formsubmit.co/peterliuproductions@gmail.com" method="POST">
-      <input type="hidden" name="_subject" value="New message from peterxliu.com">
-      <input type="hidden" name="_template" value="table">
-      <input type="hidden" name="_next" value="https://peterxliu.com/thanks.html">
-      <div class="honeypot" aria-hidden="true">
-        <label>Leave this field empty<input type="text" name="_honey" tabindex="-1" autocomplete="off"></label>
-      </div>
+    <form action="https://api.web3forms.com/submit" method="POST">
+      <!-- Replace with your Web3Forms access key (safe to be public) -->
+      <input type="hidden" name="access_key" value="214aa145-0047-4341-9ede-e3f7fd6fd376">
+      <input type="hidden" name="subject" value="New message from peterxliu.com">
+      <input type="hidden" name="from_name" value="peterxliu.com">
+      <input type="hidden" name="redirect" value="https://peterxliu.com/thanks.html">
+      <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off">
       <div class="field">
         <label for="name">Your name</label>
         <input id="name" name="name" type="text" placeholder="Name" autocomplete="name" required>
