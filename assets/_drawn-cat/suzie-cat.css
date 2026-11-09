@@ -1,0 +1,89 @@
+/* Suzie page only: the little black cat that follows the cursor. See suzie-cat.js. */
+
+.suzie-cat {
+  --s: .95;                      /* overall size */
+  --fur: #090b12;
+  --fur-far: #161b2b;
+  --eye: #a6ff82;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 160px;
+  height: 110px;
+  margin: -104px 0 0 -80px;      /* the position is where her feet are */
+  transform-origin: 80px 104px;
+  z-index: 2000;                 /* above the carousel cards, whose z-index is set by the carousel script */
+  pointer-events: none;          /* never blocks clicks or the carousel */
+  will-change: transform;
+  /* A thin cool rim light keeps a black cat readable on a dark photo. */
+  filter: drop-shadow(0 0 1.1px rgba(196,210,255,.7)) drop-shadow(0 7px 5px rgba(0,0,0,.45));
+}
+@media (max-width: 700px) { .suzie-cat { --s: .72; } }
+
+.cat-flip, .cat-tilt, .pose { width: 100%; height: 100%; }
+.cat-flip { transform-origin: 80px 104px; }
+.cat-tilt { transform-origin: 80px 104px; transition: transform 200ms ease-out; }
+.pose { display: none; overflow: visible; fill: var(--fur); }
+.suzie-cat[data-mode="walk"]  .pose-walk,
+.suzie-cat[data-mode="sit"]   .pose-sit,
+.suzie-cat[data-mode="sleep"] .pose-sleep { display: block; animation: cat-pop .28s cubic-bezier(.3,1.5,.5,1); }
+@keyframes cat-pop { from { transform: scale(.9, 1.08); } }
+
+.pose .fur-line { fill: none; stroke: var(--fur); stroke-linecap: round; }
+.pose .far { fill: var(--fur-far); }
+.pose .eye-glow { fill: var(--eye); }
+.pose .slit { fill: #050608; }
+.pose .whisker { stroke: rgba(235,240,255,.55); stroke-width: .7; stroke-linecap: round; fill: none; }
+.pose .inner-ear { fill: #1d2236; }
+.pose .nose { fill: #4a2b3a; }
+.pose .closed { fill: none; stroke: #8fe46f; stroke-width: 1.7; stroke-linecap: round; }
+
+/* Shared fill-box pivots */
+.pose g, .pose path, .pose ellipse { transform-box: fill-box; }
+
+/* ---------- Walking ---------- */
+.suzie-cat { --stride: .62s; }
+.suzie-cat[data-gait="run"] { --stride: .36s; }
+
+.pose-walk .leg { transform-origin: 50% 4%; }
+.pose-walk .tail { transform-origin: 100% 100%; }
+.pose-walk .torso { transform-origin: 50% 100%; }
+
+.suzie-cat[data-mode="walk"] .leg-a { animation: stride var(--stride) linear infinite; }
+.suzie-cat[data-mode="walk"] .leg-b { animation: stride var(--stride) linear infinite; animation-delay: calc(var(--stride) / -2); }
+.suzie-cat[data-mode="walk"] .torso { animation: bob calc(var(--stride) / 2) ease-in-out infinite; }
+.suzie-cat[data-mode="walk"] .pose-walk .tail { animation: tail-walk calc(var(--stride) * 2) ease-in-out infinite; }
+
+/* Positive rotation swings the paw backwards. The paw is planted for the first half
+   of the cycle while it travels back, then lifts and reaches forward. */
+@keyframes stride {
+  0%   { transform: rotate(-26deg) translateY(0); }
+  50%  { transform: rotate(26deg) translateY(0); }
+  75%  { transform: rotate(0deg) translateY(-5px); }
+  100% { transform: rotate(-26deg) translateY(0); }
+}
+@keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-1.8px); } }
+@keyframes tail-walk { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(8deg); } }
+
+/* ---------- Sitting (front view) ---------- */
+.pose-sit .tail { transform-origin: 0% 100%; animation: tail-swish 3.2s ease-in-out infinite; }
+.pose-sit .head { transform-origin: 50% 90%; animation: head-tilt 7s ease-in-out infinite; }
+.pose-sit .eyes { transform: translate(var(--lx, 0px), var(--ly, 0px)); transition: transform 140ms ease-out; }
+.pose-sit .lid, .pose-sleep .lid { transform-origin: 50% 50%; }
+.pose-sit .eye { animation: blink 5.5s infinite; transform-origin: 50% 50%; }
+.pose-sit .eye.r { animation-delay: .02s; }
+@keyframes tail-swish { 0%, 100% { transform: rotate(0deg); } 40% { transform: rotate(12deg); } 70% { transform: rotate(-4deg); } }
+@keyframes head-tilt { 0%, 38%, 100% { transform: rotate(0deg); } 46%, 62% { transform: rotate(-5deg); } 72% { transform: rotate(0deg); } }
+@keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.08); } }
+
+/* ---------- Sleeping ---------- */
+.pose-sleep .loaf { transform-origin: 50% 100%; animation: breathe 3.6s ease-in-out infinite; }
+@keyframes breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.06); } }
+.pose-sleep .z { fill: rgba(235,240,255,.8); font: 600 13px Montserrat, "Helvetica Neue", sans-serif; opacity: 0; animation: zzz 3.6s ease-in infinite; }
+.pose-sleep .z2 { animation-delay: 1.2s; font-size: 10px; }
+.pose-sleep .z3 { animation-delay: 2.4s; font-size: 8px; }
+@keyframes zzz { 0% { opacity: 0; transform: translate(0, 4px); } 25% { opacity: .9; } 100% { opacity: 0; transform: translate(10px, -22px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .suzie-cat, .suzie-cat * { animation: none !important; transition: none !important; }
+}
