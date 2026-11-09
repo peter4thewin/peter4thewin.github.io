@@ -10,11 +10,16 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/background.webp" type="image/webp" fetchpriority="high">
   <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/site.js"></script>
   <style>
     .about-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(260px,380px); align-items:center; gap:clamp(40px,7vw,96px); }
     .text { max-width:560px; }
     .bio { margin:0; color:var(--muted); font-size:clamp(1.05rem,1.5vw,1.25rem); line-height:1.75; letter-spacing:.01em; }
+    @keyframes focus-in { from { opacity:0; filter:blur(6px); } }
+    .bio .s { animation:focus-in 1s var(--ease) calc(.4s + var(--i) * .3s) backwards; }
+    .portrait { animation:rise 1s var(--ease) .45s backwards; }
     .portrait { display:block; width:100%; aspect-ratio:4/5; object-fit:cover; object-position:center top; border-radius:6px; box-shadow:0 20px 60px rgba(0,0,0,.35); }
     @media (max-width:760px) {
       .about-layout { grid-template-columns:1fr; gap:36px; }
@@ -39,7 +44,7 @@
     <section class="about-layout" aria-label="About Peter">
       <div class="text">
         <h1 class="page-title">About</h1>
-        <p class="bio">Peter is an LA-based filmmaker originally from Harrisburg, Pennsylvania. He has worked on movies and TV shows for over ten years and loves making his own projects on the side. Stories continue to fascinate him, and he wants to bring his favorite ones to the big screen.</p>
+        <p class="bio"><span class="s" style="--i:0">Peter is an LA-based filmmaker originally from Harrisburg, Pennsylvania.</span> <span class="s" style="--i:1">He has worked on movies and TV shows for over ten years and loves making his own projects on the side.</span> <span class="s" style="--i:2">Stories continue to fascinate him, and he wants to bring his favorite ones to the big screen.</span></p>
       </div>
       <img class="portrait" src="assets/self-portrait.jpg" alt="Portrait of Peter Liu" decoding="async">
     </section>

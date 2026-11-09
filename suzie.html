@@ -10,7 +10,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/background.webp" type="image/webp" fetchpriority="high">
   <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/suzie-cat.css">
+  <script src="assets/site.js"></script>
   <style>
     html, body { overflow-x: clip; }
     main { padding-top: clamp(110px, 15vh, 150px); padding-bottom: 60px; }
@@ -20,6 +23,8 @@
 
     /* Carousel: the front photo is full size, the ones beside it step down and tuck behind it.
        Position, scale, brightness and stacking order are all set continuously by render() in the script. */
+    .stage { animation:rise .9s var(--ease) .25s backwards; }
+    .controls { animation:rise .9s var(--ease) .4s backwards; }
     .stage { position:relative; height:calc(var(--cw) * 4 / 3); margin-top:36px; touch-action:pan-y; user-select:none; -webkit-user-select:none; }
     .cat-card {
       position:absolute; top:0; left:50%; width:var(--cw); aspect-ratio:3/4; margin:0;
@@ -209,5 +214,6 @@
     render();
     setPlaying(playing);
   </script>
+  <script src="assets/suzie-cat.js" defer></script>
 </body>
 </html>

@@ -10,6 +10,7 @@
   --ease: cubic-bezier(.22,.7,.18,1);
 }
 * { box-sizing: border-box; }
+html { background: var(--bg); }
 body {
   margin: 0;
   min-height: 100svh;
@@ -24,14 +25,74 @@ body {
 body::before {
   content: "";
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  /* Size from the full window (vw / lvh), not from inset: 0. inset follows the
+     visible area, which shrinks by ~15px when a page has a scrollbar and when
+     the mobile address bar moves, and that made the photo shift between pages. */
+  width: 100vw;
+  height: 100vh;
+  height: 100lvh;
   z-index: -1;
   pointer-events: none;
-  background-image: linear-gradient(rgba(11,16,32,.30), rgba(11,16,32,.50)), url("background.webp");
-  background-position: center center, center center;
-  background-size: 100% 100%, cover;
-  background-repeat: no-repeat, no-repeat;
+  /* Layers, top to bottom: vignette, navy wash, photo. */
+  background-image:
+    radial-gradient(ellipse 80% 75% at 50% 46%, rgba(3,5,12,0) 52%, rgba(3,5,12,.5) 100%),
+    linear-gradient(rgba(11,16,32,.30), rgba(11,16,32,.50)),
+    url("background.webp");
+  background-position: center center, center center, center center;
+  background-size: 100% 100%, 100% 100%, cover;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  /* Slow "breathing" drift. site.js sets --bg-delay so the motion carries on
+     from the same point when you go to another page instead of restarting. */
+  transform-origin: 50% 50%;
+  will-change: transform;
+  animation: bg-breathe 32s ease-in-out infinite alternate;
+  animation-delay: var(--bg-delay, 0s);
 }
+@keyframes bg-breathe {
+  from { transform: scale(1) translate3d(0, 0, 0); }
+  to   { transform: scale(1.06) translate3d(-.8%, -.5%, 0); }
+}
+
+/* Film grain. Sits above the photo and below the page content. The layer is
+   oversized and hops around in steps, which reads as grain without repainting. */
+body::after {
+  content: "";
+  position: fixed;
+  top: -200px;
+  left: -200px;
+  width: calc(100vw + 400px);
+  height: calc(100vh + 400px);
+  height: calc(100lvh + 400px);
+  z-index: -1;
+  pointer-events: none;
+  opacity: .1;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1.1 -.15'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 240px 240px;
+  animation: grain 1s steps(1) infinite;
+}
+@keyframes grain {
+  0%   { transform: translate3d(0, 0, 0); }
+  12%  { transform: translate3d(-70px, 40px, 0); }
+  25%  { transform: translate3d(50px, -90px, 0); }
+  37%  { transform: translate3d(-120px, -30px, 0); }
+  50%  { transform: translate3d(90px, 80px, 0); }
+  62%  { transform: translate3d(-30px, 120px, 0); }
+  75%  { transform: translate3d(110px, -50px, 0); }
+  87%  { transform: translate3d(-90px, 70px, 0); }
+}
+
+/* Page-to-page cross-fade. The header stays put while the content fades. */
+@view-transition { navigation: auto; }
+::view-transition-old(root), ::view-transition-new(root) {
+  animation-duration: 340ms;
+  animation-timing-function: ease;
+}
+@media (min-width: 761px) {
+  .site-header { view-transition-name: site-header; }
+}
+::view-transition-group(site-header) { animation-duration: 0s; }
 
 /* Header: home link on the left, nav on the right, centered on one line. */
 .site-header {
@@ -108,6 +169,69 @@ main {
 }
 .btn:hover { background: var(--white); color: var(--bg); }
 
+/* Load-in reveals. fill-mode is "backwards" on purpose: once an element has
+   finished it goes back to its normal styles, so hover transforms still work. */
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } }
+@keyframes draw { from { transform: scaleX(0); } }
+.page-title { animation: rise .8s var(--ease) .05s backwards; }
+.page-title::after { transform-origin: left center; animation: draw .9s var(--ease) .35s backwards; }
+.intro { animation: rise .8s var(--ease) .18s backwards; }
+
+/* Video thumbnails (Selected Works, Unreal Engine) */
+.grid > .card {
+  animation: rise .8s var(--ease) backwards;
+  animation-delay: calc(.28s + var(--i, 0) * 90ms);
+  transition: transform 420ms var(--ease);
+}
+.grid > .card:nth-child(2) { --i: 1; }
+.grid > .card:nth-child(3) { --i: 2; }
+.grid > .card:nth-child(4) { --i: 3; }
+.grid > .card:nth-child(5) { --i: 4; }
+.grid > .card:nth-child(6) { --i: 5; }
+.grid > .card:nth-child(n+7) { --i: 6; }
+.grid .thumb {
+  box-shadow: 0 10px 30px rgba(0,0,0,.22);
+  transition: box-shadow 420ms var(--ease);
+}
+.grid .thumb::before {
+  content: "Watch";
+  position: absolute;
+  z-index: 1;
+  left: 0; right: 0; bottom: 0;
+  padding: 40px 14px 12px;
+  background: linear-gradient(rgba(5,8,18,0), rgba(5,8,18,.78));
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  transform: translateY(101%);
+  transition: transform 420ms var(--ease);
+}
+.grid .thumb::after { z-index: 1; }
+.grid .title { transition: transform 420ms var(--ease); }
+.grid .card:focus-visible { transform: translateY(-6px); }
+.grid .card:focus-visible .thumb { box-shadow: 0 26px 50px rgba(0,0,0,.5); }
+.grid .card:focus-visible .thumb::before { transform: none; }
+.grid .card:focus-visible .title { transform: translateX(6px); }
+@media (hover: hover) {
+  .grid .card:hover { transform: translateY(-6px); }
+  .grid .card:hover .thumb { box-shadow: 0 26px 50px rgba(0,0,0,.5); }
+  .grid .card:hover .thumb::before { transform: none; }
+  .grid .card:hover .title { transform: translateX(6px); }
+}
+/* Optional hover preview clip, added by cards.js when assets/previews/<id>.mp4 exists. */
+.thumb video.preview {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 300ms ease;
+}
+.thumb video.preview.is-on { opacity: 1; }
+
 @media (max-width: 760px) {
   .site-header {
     position: absolute;
@@ -127,5 +251,6 @@ main {
   .page-title::after { margin-top: 18px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { transition-duration: .01ms !important; }
+  *, *::before, *::after { transition-duration: .01ms !important; animation: none !important; }
+  @view-transition { navigation: none; }
 }

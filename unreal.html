@@ -11,7 +11,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://i.ytimg.com">
+  <link rel="preload" as="image" href="assets/background.webp" type="image/webp" fetchpriority="high">
   <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/site.js"></script>
   <style>
     .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:44px 28px; margin-top:56px; }
     .card { display:block; color:var(--white); text-decoration:none; }
@@ -129,5 +131,6 @@
       if (!inside) closePlayer();
     });
   </script>
+  <script src="assets/cards.js" defer></script>
 </body>
 </html>

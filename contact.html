@@ -10,8 +10,11 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <link rel="preload" as="image" href="assets/background.webp" type="image/webp" fetchpriority="high">
   <link rel="stylesheet" href="assets/site.css">
+  <script src="assets/site.js"></script>
   <style>
+    .form-panel { animation:rise .9s var(--ease) .3s backwards; }
     .form-panel { padding:34px 36px; background:rgba(7,12,27,.68); border:1px solid rgba(245,247,255,.13); border-radius:8px; -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px); box-shadow:0 18px 55px rgba(0,0,0,.18); }
     form { display:grid; gap:27px; }
     .field { display:grid; gap:11px; }
