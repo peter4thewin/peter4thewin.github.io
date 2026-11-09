@@ -5,22 +5,24 @@
    down and curls up to sleep. Move the mouse and she wakes up. On touch screens she walks to
    wherever you tap. With "reduce motion" on she just sits in the corner.
 
-   Artwork: suzie-sprites.webp, a 4 x 3 grid. Frame numbers below count left to right, top to bottom. */
+   Artwork: suzie-sprites.webp, an 8 x 3 grid. Frame numbers below are row * 8 + column. */
 (() => {
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const WALK = [0, 1, 2, 3];       // walk cycle, facing right
-  const LIE = [4, 5, 6, 7];        // lying down, then curled up; she breathes between the last two
-  const SIT_FRONT = 8;             // sitting, facing you
-  const SIT_GLANCE = 9;            // sitting, eyes to the side
-  const SIT_TURNED = 10;           // sitting, turned right
-  const SIT_BACK = 11;             // sitting, with her back to you
+  const COLS = 8;                  // columns in the sprite sheet
+  const WALK = [0, 1, 2, 3, 4, 5, 6, 7];   // one full walk cycle, facing right (rear-left, front-left, rear-right, front-right)
+  const LIE = [8, 9, 10, 11];      // lying down, then curled up; she breathes between the last two
+  const SIT_FRONT = 16;            // sitting, facing you
+  const SIT_GLANCE = 17;           // sitting, eyes to the side
+  const SIT_TURNED = 18;           // sitting, turned right
+  const SIT_BACK = 19;             // sitting, with her back to you
 
   const STOP = 78;                 // she sits down this far from the cursor...
   const GO = 108;                  // ...and gets up again when it is farther than this
   const TURN_AWAY_AFTER = 7000;    // ms of stillness before she turns her back
   const SLEEP_AFTER = 14000;       // ms of stillness before she lies down
-  const STRIDE = 110;              // px covered by one pass through the walk cycle (sets foot speed)
+  const STRIDE = 62;               // px she covers in one full walk cycle (paws are drawn to match this at walking speed)
+  const MIN_CYCLE = .32;           // s; the fastest she cycles her legs, so a sprint is a scamper rather than a blur
 
   const here = document.currentScript && document.currentScript.src;
   const spriteUrl = here ? new URL('suzie-sprites.webp', here).href : 'assets/suzie-sprites.webp';
@@ -59,13 +61,13 @@
     let x = -100, y = vh - 70;     // feet position
     let tx = 190, ty = vh - 70;    // where she is heading
     let px = tx, py = ty;          // last known pointer position
-    let walkFrame = 0, walkClock = 0;
+    let walkPhase = 0;             // 0..1 through the walk cycle
     let raf = 0, last = 0;
     let awayTimer = 0, sleepTimer = 0, sleepSteps = 0;
 
     function showFrame(i) {
-      sprite.style.setProperty('--c', i % 4);
-      sprite.style.setProperty('--r', Math.floor(i / 4));
+      sprite.style.setProperty('--c', i % COLS);
+      sprite.style.setProperty('--r', Math.floor(i / COLS));
     }
     function render() {
       cat.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0) scale(var(--s))`;
@@ -139,11 +141,9 @@
         y += (dy / dist) * step;
         if (Math.abs(dx) > 12) dir = dx > 0 ? 1 : -1;
 
-        // Step the walk cycle faster when she is moving faster, so her paws keep up with the ground.
-        walkClock += dt;
-        const interval = clamp(STRIDE / 4 / speed, .075, .2);
-        if (walkClock >= interval) { walkClock = 0; walkFrame = (walkFrame + 1) % WALK.length; }
-        showFrame(WALK[walkFrame]);
+        // Run the walk cycle faster when she moves faster, so her paws keep up with the ground.
+        walkPhase = (walkPhase + dt / clamp(STRIDE / speed, MIN_CYCLE, 1.2)) % 1;
+        showFrame(WALK[Math.floor(walkPhase * WALK.length) % WALK.length]);
 
         // Lean a little toward vertical movement (mirrored when she faces left).
         const lean = clamp(Math.atan2(dy, Math.max(Math.abs(dx), 40)) * 22, -13, 13);
