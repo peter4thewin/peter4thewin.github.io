@@ -66,6 +66,56 @@
       overflow: hidden;
       background: url("assets/black-cat.jpg") center 42% / cover no-repeat;
       transition: transform 1.1s var(--ease);
+      z-index: 0;
+    }
+    .portrait-button::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: rgba(5, 9, 18, 0);
+      transition: background 500ms ease;
+      pointer-events: none;
+    }
+    .portrait-hint {
+      position: absolute;
+      z-index: 2;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(7px);
+      transition: opacity 450ms ease, transform 450ms ease;
+      pointer-events: none;
+      text-shadow: 0 1px 12px rgba(0,0,0,.35);
+    }
+    .portrait-hint::before {
+      content: "";
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 7px solid currentColor;
+    }
+    .portrait-button:hover .portrait-art,
+    .portrait-button:focus-visible .portrait-art {
+      transform: scale(1.045);
+    }
+    .portrait-button:hover::after,
+    .portrait-button:focus-visible::after {
+      background: rgba(5, 9, 18, .34);
+    }
+    .portrait-button:hover .portrait-hint,
+    .portrait-button:focus-visible .portrait-hint {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     /* The flying copy of the portrait. Same image, same crop rule as the
@@ -188,6 +238,13 @@
       .site-header { position: fixed; flex-direction: row; align-items: center; top: 18px; left: 20px; right: 20px; min-height: 32px; }
       .page { padding: 70px 20px; }
       .portrait-button { width: min(72vw, 310px); }
+      .portrait-hint {
+        opacity: 1;
+        transform: none;
+        font-size: 10px;
+        letter-spacing: .14em;
+      }
+      .portrait-button::after { background: rgba(5, 9, 18, .16); }
       .reel { width: calc(100% - 32px); }
       .back { top: 18px; left: 20px; height: 32px; }
       .footer-note { left: 20px; right: 20px; bottom: 16px; }
@@ -212,7 +269,7 @@
     <section class="landing" id="landing" aria-label="Peter Liu portfolio">
       <button class="portrait-button" id="enter" aria-label="Play Peter Liu's director reel">
         <span class="portrait-art" aria-hidden="true"></span>
-        
+        <span class="portrait-hint">View director's reel</span>
       </button>
       <h1 class="name">Peter Liu</h1>
       <p class="role">Director · Filmmaker · Artist</p>
