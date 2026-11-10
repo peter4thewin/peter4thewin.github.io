@@ -1,8 +1,7 @@
 /* Suzie page only: the little black cat that follows the cursor. See suzie-cat.js.
-   The artwork is an 8 x 3 sprite sheet (suzie-sprites.webp), one pose per cell:
+   The artwork is an 8 x 2 sprite sheet (suzie-sprites.webp), one pose per cell:
      row 1: walk cycle (8 frames)
-     row 2: lying down / curled up (first 4 cells)
-     row 3: sitting - front, glance, turned, from behind (first 4 cells) */
+     row 2: asleep (flat), asleep (curled up), drowsy sit, sitting, sitting tall (first 5 cells) */
 
 .suzie-cat {
   --s: 1;                        /* overall size multiplier */
@@ -28,7 +27,7 @@
 .cat-flip, .cat-breathe { transform-origin: 50% var(--foot); }
 .cat-tilt { transform-origin: 50% var(--foot); transition: transform 200ms ease-out; }
 .cat-sprite {
-  background: url("suzie-sprites.webp") 0 0 / calc(var(--fw) * 8) calc(var(--fh) * 3) no-repeat;
+  background: url("suzie-sprites.webp") 0 0 / calc(var(--fw) * 8) calc(var(--fh) * 2) no-repeat;
   background-position: calc(var(--c, 0) * var(--fw) * -1) calc(var(--r, 0) * var(--fh) * -1);
 }
 
