@@ -21,9 +21,9 @@
   const GO = 108;                  // ...and gets up again when it is farther than this
   const DROWSY_AFTER = 7000;       // ms of stillness before her eyes start to close
   const SLEEP_AFTER = 14000;       // ms of stillness before she lies down
-  const STRIDE = 110;              // px she covers in one full walk cycle (sets how fast the legs go for a given speed)
-  const MIN_CYCLE = .3;            // s; the fastest she cycles her legs, so a sprint is a scamper rather than a blur
-  const MAX_CYCLE = .8;            // s; the slowest, so a slow stroll still reads as walking
+  const STRIDE = 350;              // px she covers in one full walk cycle (sets how fast the legs go for a given speed)
+  const MIN_CYCLE = .82;            // s; the fastest she cycles her legs, so a sprint is a scamper rather than a blur
+  const MAX_CYCLE = 1.2;            // s; the slowest, so a slow stroll still reads as walking
 
   const here = document.currentScript && document.currentScript.src;
   const spriteUrl = here ? new URL('suzie-sprites.webp', here).href : 'assets/suzie-sprites.webp';
@@ -137,7 +137,8 @@
         y += (dy / dist) * step;
         if (Math.abs(dx) > 12) dir = dx > 0 ? 1 : -1;
 
-        // Run the walk cycle faster when she moves faster, so her paws keep up with the ground.
+        // Keep the walk cycle tied to travel speed, with a calmer minimum cycle duration.
+        // The previous 0.3 s minimum advanced up to 40 sprite-frame changes per second.
         walkPhase = (walkPhase + dt / clamp(STRIDE / speed, MIN_CYCLE, MAX_CYCLE)) % 1;
         showFrame(WALK[Math.floor(walkPhase * WALK.length) % WALK.length]);
 
