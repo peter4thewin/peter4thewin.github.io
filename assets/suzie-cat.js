@@ -111,12 +111,12 @@
       if (mode !== 'sit') return;
       setMode('sleep');
       cat.style.setProperty('--zx', dir === 1 ? '70%' : '24%');
-      const seq = [SIT_DROWSY, LIE_FLAT, LIE_CURL];
+      const seq = [LIE_FLAT, LIE_CURL];
       let n = 0;
       const step = () => {
         if (mode !== 'sleep') return;
         showFrame(seq[n]);
-        if (n < seq.length - 1) { n++; sleepSteps = setTimeout(step, 500); }
+        if (n < seq.length - 1) { n++; sleepSteps = setTimeout(step, 1000); }
         else cat.dataset.settled = '1';
         render();
       };
