@@ -5,17 +5,17 @@
    curls up to sleep. Move the mouse and she wakes up. On touch screens she walks to
    wherever you tap. With "reduce motion" on she just sits in the corner.
 
-   Artwork: suzie-sprites.webp, an 8 x 2 grid. Frame numbers below are row * 8 + column. */
+   Artwork: suzie-sprites.webp, a 12 x 2 grid. Frame numbers below are row * 12 + column. */
 (() => {
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  const COLS = 8;                  // columns in the sprite sheet
-  const WALK = [0, 1, 2, 3, 4, 5, 6, 7];   // one full walk cycle, facing right
-  const LIE_FLAT = 8;              // lying down, asleep
-  const LIE_CURL = 9;              // curled up, asleep
-  const SIT_DROWSY = 10;           // sitting, eyes half closed
-  const SIT_ALERT = 11;            // sitting, watching the cursor
-  const SIT_TALL = 12;             // sitting up tall, for a cursor that is high above her
+  const COLS = 12;                 // columns in the sprite sheet
+  const WALK = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];   // one full walk cycle, facing right
+  const LIE_FLAT = 12;             // lying down, asleep
+  const LIE_CURL = 13;             // curled up, asleep
+  const SIT_DROWSY = 14;          // sitting, eyes half closed
+  const SIT_ALERT = 15;           // sitting, watching the cursor
+  const SIT_TALL = 16;            // sitting up tall, for a cursor that is high above her
 
   const STOP = 78;                 // she sits down this far from the cursor...
   const GO = 108;                  // ...and gets up again when it is farther than this
