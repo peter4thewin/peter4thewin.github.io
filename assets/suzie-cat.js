@@ -19,8 +19,8 @@
 
   const STOP = 78;                 // she sits down this far from the cursor...
   const GO = 108;                  // ...and gets up again when it is farther than this
-  const DROWSY_AFTER = 7000;       // ms of stillness before her eyes start to close
-  const SLEEP_AFTER = 14000;       // ms of stillness before she lies down
+  const DROWSY_AFTER = 3000;       // ms of stillness before her eyes start to close
+  const SLEEP_AFTER = 7000;       // ms of stillness before she lies down
   const STRIDE = 350;              // px she covers in one full walk cycle (sets how fast the legs go for a given speed)
   const MIN_CYCLE = .82;            // s; the fastest she cycles her legs, so a sprint is a scamper rather than a blur
   const MAX_CYCLE = 1.2;            // s; the slowest, so a slow stroll still reads as walking
