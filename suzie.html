@@ -10,13 +10,23 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
-  <link rel="preload" as="image" href="assets/background.webp" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="assets/cozybackground.webp" type="image/webp" fetchpriority="high">
   <link rel="stylesheet" href="assets/site.css">
   <link rel="preload" as="image" href="assets/suzie-sprites.webp" type="image/webp">
   <link rel="stylesheet" href="assets/suzie-cat.css">
   <script src="assets/site.js"></script>
   <style>
     html, body { overflow-x: clip; }
+    /* Suzie's page: cozy cafe painting instead of the shared background, dimmed with a warm
+       brown wash and a vignette so the white text and photos stay easy on the eyes.
+       Raise the two wash alphas (.58 / .72) for darker, lower them for brighter. */
+    html, body { background: #1a110a; }
+    body::before {
+      background-image:
+        radial-gradient(ellipse 80% 75% at 50% 46%, rgba(12,7,3,0) 45%, rgba(12,7,3,.55) 100%),
+        linear-gradient(rgba(26,15,8,.58), rgba(26,15,8,.72)),
+        url("assets/cozybackground.webp");
+    }
     main { padding-top: clamp(110px, 15vh, 150px); padding-bottom: 60px; }
     .cats { --cw: clamp(170px, min(26vw, 44svh), 360px); }
     .cats .page-title { margin-bottom: 0; }
