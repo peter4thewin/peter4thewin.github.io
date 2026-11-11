@@ -20,6 +20,10 @@
     main { padding-top: clamp(110px, 15vh, 150px); padding-bottom: 60px; }
     .cats { --cw: clamp(170px, min(26vw, 44svh), 360px); }
     .cats .page-title { margin-bottom: 0; }
+    /* Suzie's page: replace the standard pointer with a tiny ball of yarn. */
+    html, body, body * {
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cpath d='M6 16C6 8 12 4 18 5c7 1 10 8 7 14-2 6-9 9-15 6-3-2-5-5-4-9Z' fill='%23e9a8c8' stroke='%237b4568' stroke-width='1.5'/%3E%3Cpath d='M8 12c5 4 12 5 18 1M7 18c6-4 13-3 18 3M11 7c-1 7 4 14 11 19M18 5c-3 6-2 14 4 21' fill='none' stroke='%237b4568' stroke-width='1.5' stroke-linecap='round'/%3E%3Cpath d='M5 24c-2 2-2 4 0 5 2 1 4 0 5-2' fill='none' stroke='%237b4568' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E") 10 10, auto !important;
+    }
     .sr-only { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
 
     /* Carousel: the front photo is full size, the ones beside it step down and tuck behind it.
