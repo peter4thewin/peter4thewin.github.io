@@ -6,7 +6,7 @@
 .suzie-cat {
   --s: 1;                        /* overall size multiplier */
   --fw: 137.5px;                 /* one sprite cell, as displayed */
-  --fh: 117px;
+  --fh: 116.82px;
   --foot: 114.8px;               /* where the paws touch the ground inside a cell */
   position: fixed;
   left: 0;

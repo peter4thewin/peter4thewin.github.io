@@ -5,7 +5,7 @@
    curls up to sleep. Move the mouse and she wakes up. On touch screens she walks to
    wherever you tap. With "reduce motion" on she just sits in the corner.
 
-   Artwork: suzie-sprites.webp, a 12 x 2 grid. Frame numbers below are row * 12 + column. */
+   Artwork: suzie-sprites.webp, a 12 x 2 grid (walk row traced from a reference video). Frame numbers below are row * 12 + column. */
 (() => {
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -19,11 +19,11 @@
 
   const STOP = 78;                 // she sits down this far from the cursor...
   const GO = 108;                  // ...and gets up again when it is farther than this
-  const DROWSY_AFTER = 3000;       // ms of stillness before her eyes start to close
-  const SLEEP_AFTER = 3250;       // ms of stillness before she lies down
-  const STRIDE = 350;              // px she covers in one full walk cycle (sets how fast the legs go for a given speed)
-  const MIN_CYCLE = .82;            // s; the fastest she cycles her legs, so a sprint is a scamper rather than a blur
-  const MAX_CYCLE = 1.2;            // s; the slowest, so a slow stroll still reads as walking
+  const DROWSY_AFTER = 7000;       // ms of stillness before her eyes start to close
+  const SLEEP_AFTER = 14000;       // ms of stillness before she lies down
+  const STRIDE = 110;              // px she covers in one full walk cycle (sets how fast the legs go for a given speed)
+  const MIN_CYCLE = .3;            // s; the fastest she cycles her legs, so a sprint is a scamper rather than a blur
+  const MAX_CYCLE = 1.2;           // s; the slowest, matching the 1.2 s gait in the source video so slow walking does not slide
 
   const here = document.currentScript && document.currentScript.src;
   const spriteUrl = here ? new URL('suzie-sprites.webp', here).href : 'assets/suzie-sprites.webp';
@@ -111,12 +111,12 @@
       if (mode !== 'sit') return;
       setMode('sleep');
       cat.style.setProperty('--zx', dir === 1 ? '70%' : '24%');
-      const seq = [LIE_FLAT, LIE_CURL];
+      const seq = [SIT_DROWSY, LIE_FLAT, LIE_CURL];
       let n = 0;
       const step = () => {
         if (mode !== 'sleep') return;
         showFrame(seq[n]);
-        if (n < seq.length - 1) { n++; sleepSteps = setTimeout(step, 250); }
+        if (n < seq.length - 1) { n++; sleepSteps = setTimeout(step, 700); }
         else cat.dataset.settled = '1';
         render();
       };
@@ -137,8 +137,7 @@
         y += (dy / dist) * step;
         if (Math.abs(dx) > 12) dir = dx > 0 ? 1 : -1;
 
-        // Keep the walk cycle tied to travel speed, with a calmer minimum cycle duration.
-        // The previous 0.3 s minimum advanced up to 40 sprite-frame changes per second.
+        // Run the walk cycle faster when she moves faster, so her paws keep up with the ground.
         walkPhase = (walkPhase + dt / clamp(STRIDE / speed, MIN_CYCLE, MAX_CYCLE)) % 1;
         showFrame(WALK[Math.floor(walkPhase * WALK.length) % WALK.length]);
 
