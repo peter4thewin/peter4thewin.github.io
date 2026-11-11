@@ -20,8 +20,8 @@
   const STOP = 78;                 // she sits down this far from the cursor...
   const GO = 108;                  // ...and gets up again when it is farther than this
   const DROWSY_AFTER = 7000;       // ms of stillness before her eyes start to close
-  const SLEEP_AFTER = 14000;       // ms of stillness before she lies down
-  const STRIDE = 110;              // px she covers in one full walk cycle (sets how fast the legs go for a given speed)
+  const SLEEP_AFTER = 1000;       // ms of stillness before she lies down
+  const STRIDE = 80;              // px she covers in one full walk cycle (sets how fast the legs go for a given speed)
   const MIN_CYCLE = .3;            // s; the fastest she cycles her legs, so a sprint is a scamper rather than a blur
   const MAX_CYCLE = 1.2;           // s; the slowest, matching the 1.2 s gait in the source video so slow walking does not slide
 
